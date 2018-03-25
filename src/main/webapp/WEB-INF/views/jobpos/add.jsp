@@ -27,9 +27,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		.amap-sug-result{
 			z-index:100000;
 		}
-		/* #fieldHidden{
+		
+		#fieldHidden{
 			display: none;
-		} */
+		}
 	</style>
 	
 </head>
@@ -39,19 +40,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<!--头部内容-->
     <div class="header">
         <ol class="breadcrumb">
-            <li><a>首页</a></li>
+            <li>人事信息管理</li>
             <li>></li>
-            <li><a>***</a></li>
-            <li>></li>
-            <li><a>***</a></li>
-            <li>></li>
-            <li class="active">**</li>
+            <li class="active">职位信息新增</li>
         </ol>
     </div>
     <!--提示必填项部分-->
 	<div class="filter panel panel-default">
 		<div class="panel-heading" style="border-bottom:0px;">
-			<span>温馨提示：带*的为必填部分，请核对完成后点击添加</span>
+			<span>温馨提示：带*的为必填部分，请核对完成后点击保存</span>
 			
 	<span type = "button" id ="save" class="save">保存</span>
 	<span type = "button" id= "back" class="back">返回</span>
@@ -68,13 +65,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         </div>
         <div class="panel-body pad-tb-25" id="jcxx">
         	 <div class="row">
-				<div class="col-xs-6 row ie-col-6">
-                    <span class="col-xs-3 glyphicon">* 主键：
-                    </span>
-                    <div class="col-xs-9 pad-0 row">
-                        <input type="text" class="col-xs-12 GL-add-require" id="id" value="">
-                    </div>
-                </div>
+
 				<div class="col-xs-6 row ie-col-6">
                     <span class="col-xs-3 glyphicon">* 职位名称：
                     </span>
@@ -100,17 +91,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     <span class="col-xs-3 glyphicon">* 所属部门：
                     </span>
                     <div class="col-xs-9 pad-0 row">
-                        <input type="text" class="col-xs-12 GL-add-require" id="deptId" value="">
+                        <select id="deptId" style="width:200px;" >
+                        	
+                        </select>
                     </div>
                 </div>
-				<div class="col-xs-6 row ie-col-6">
-                    <span class="col-xs-3 glyphicon">* 创建时间：
-                    </span>
-                    <div class="col-xs-9 pad-0 row">
-                        <input type="text" class="col-xs-12 GL-add-require" id="createTime" value="">
-                    </div>
-                </div>
-        	 	
                 
         	 </div>
         </div>
@@ -120,23 +105,40 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </body>
 
 <script type="text/javascript">
+
+/* 获取到部门信息集合 */
+$.ajax({
+	url:'<%=path %>/department/ajaxSelectDept',
+		type:'post',
+		cache:false,
+		dataType:'json',
+		contentType: "application/json;charset=UTF-8",
+   	success:function(data){
+   		var list = data.data.data;
+   		var _html = "<option value='0'>请选择所属部门</option>";
+	    for(var i=0;i<list.length;i++){
+	    	_html += "<option value='"+list[i].id+"'>"+list[i].deptname+"</option>";
+	    }
+	    $("#deptId").html(_html);
+   	}, 
+   	error:function() {
+   		alert("异常！");
+   	}
+});
+
 var jobposParam = {};
-	jobposParam.id;
 	jobposParam.jobposName;
 	jobposParam.jobposCode;
 	jobposParam.jobposLevel;
 	jobposParam.deptId;
-	jobposParam.createTime;
 
 	$("#save").click(function(){
 		var param = JSON.parse(JSON.stringify(jobposParam));
 		
-					param.id=$("#id").val();
 					param.jobposName=$("#jobposName").val();
 					param.jobposCode=$("#jobposCode").val();
 					param.jobposLevel=$("#jobposLevel").val();
 					param.deptId=$("#deptId").val();
-					param.createTime=$("#createTime").val();
 				
 	    $.ajax({url:'<%=path %>/jobpos/insert',
        		type:'post',

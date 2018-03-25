@@ -7,6 +7,7 @@
 package com.design.graduation.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -51,10 +52,22 @@ public interface EmployeeMapper {
     int selectCount(Employee employee);
 
     /**
+     * @description: TODO - 主要区分拥有的模糊查询
+     * @author: 郭伟强   E-mail:gwq20521@163.com
+     * @createTime: 2018年3月24日 下午9:33:08
+     * @param employee
+     * @return
+     */
+    int selectRelationCount(Employee employee);
+
+    /**
      * 根据条件查询Employee数据
      * @param employee
      */
     List<Employee> selectData(@Param("employee") Employee employee, @Param("limit") int limit,
+            @Param("offset") int offset, @Param("order_by") String order_by);
+
+    List<Map<String, Object>> selectRelationData(@Param("employee") Employee employee, @Param("limit") int limit,
             @Param("offset") int offset, @Param("order_by") String order_by);
 
     /**
@@ -64,4 +77,9 @@ public interface EmployeeMapper {
     List<Employee> selectByParam(@Param("employee") Employee employee, @Param("order_by") String order_by);
 
     String ajaxSelectMaxEmpCode();
+
+    List<Map<Integer, String>> ajaxSelectEmpByJobposId(@Param("jobposId") String jobposId);
+
+    String selectRealnameById(@Param("id") Integer id);
+
 }

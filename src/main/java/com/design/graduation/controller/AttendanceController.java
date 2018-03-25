@@ -33,101 +33,109 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSON;
-import com.design.graduation.model.Jobpos;
-import com.design.graduation.service.JobposService;
+import com.design.graduation.model.Attendance;
+import com.design.graduation.model.Employee;
+import com.design.graduation.service.AttendanceService;
 import com.design.graduation.util.JqGridJsonBean;
 import com.design.graduation.util.ReturnData;
 import com.google.gson.Gson;
 
 /**
  * <p>控制层</p>
- * <p>Table: jobpos - </p>
- * jobpos insert 增加数据,
- * jobpos delete 删除数据,
- * jobpos update 修改数据,
- * jobpos select 查询数据,
- * jobpos export 导出数据,
- * jobpos import 导入数据
+ * <p>Table: attendance - </p>
+ * attendance insert 增加数据,
+ * attendance delete 删除数据,
+ * attendance update 修改数据,
+ * attendance select 查询数据,
+ * attendance export 导出数据,
+ * attendance import 导入数据
  * @since ${.now}
  */
 @Controller
-@RequestMapping(value = "/jobpos")
-public class JobposController {
+@RequestMapping(value = "/attendance")
+public class AttendanceController {
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     @Resource
-    private JobposService jobposService;
+    private AttendanceService attendanceService;
 
     /**
      * 数据展示页面
      * @return
      */
-    @RequiresPermissions(value = "jobpos_show")
+    @RequiresPermissions(value = "attendance_show")
     @RequestMapping(value = "/show", method = RequestMethod.GET)
     public String show(Model model, HttpServletRequest request) {
-        return "jobpos/show";
+        return "attendance/show";
     }
 
     /**
      * 数据新增页面
      * @return
      */
-    @RequiresPermissions(value = "jobpos_add")
+    @RequiresPermissions(value = "attendance_add")
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String add(Model model, HttpServletRequest request) {
-        return "jobpos/add";
+        return "attendance/add";
     }
 
     /**
      * 数据修改页面
      * @return
      */
-    @RequiresPermissions(value = "jobpos_edit")
+    @RequiresPermissions(value = "attendance_edit")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String edit(Model model, HttpServletRequest request) {
         String id = request.getParameter("id");
 
-        Jobpos jobpos = new Jobpos();
-        jobpos.setId(Integer.valueOf(Integer.parseInt(id)));
+        Attendance attendance = new Attendance();
+        attendance.setId(Integer.valueOf(Integer.parseInt(id)));
 
-        ReturnData rd = jobposService.selectByParam(null, jobpos);
+        ReturnData rd = attendanceService.selectByParam(null, attendance);
         if (rd.getCode().equals("OK")) {
-            List<Jobpos> data = (List<Jobpos>) rd.getData().get("data");
+            List<Attendance> data = (List<Attendance>) rd.getData().get("data");
 
             model.addAttribute("olddata", JSON.toJSONString(data.get(0)));
         }
-        return "jobpos/edit";
+        return "attendance/edit";
     }
 
     /**
-     * 对 jobpos 的数据插入操作
-     * @param jobpos json 数据对象
+     * 对 attendance 的数据插入操作
+     * @param attendance json 数据对象
      * @param model spring model 操作
      * @param request 请求数据
      * @return ReturnData 通用数据对象
      */
-    @RequestMapping(value = "/insert", method = RequestMethod.POST, consumes = "application/json")
+    @RequestMapping(value = "/insert", method = RequestMethod.POST)
     @ResponseBody
-    public ReturnData insert(@RequestBody Jobpos jobpos, Model model, HttpServletRequest request) {
-        return jobposService.insert(jobpos);//执行插入 Jobpos 操作
+    public ReturnData insert(HttpServletRequest request) {
+        Employee currentEmp = ((Employee) request.getSession().getAttribute("current_emp"));
+
+        Attendance attendance = new Attendance();
+
+        attendance.setEmpId(currentEmp.getId());
+        attendance.setAttdState(1);//0-缺勤(旷工) - 1-正常 2-迟到 3-请假 4-调休
+
+        return attendanceService.insert(attendance);//执行插入 Attendance 操作
     }
 
     /**
-     * 对 jobpos 的数据删除操作
-     * @param jobpos json 数据对象
+     * 对 attendance 的数据删除操作
+     * @param attendance json 数据对象
      * @param model spring model 操作
      * @param request 请求数据
      * @return ReturnData 通用数据对象
      */
     @RequestMapping(value = "/delete", method = RequestMethod.POST, consumes = "application/json")
     @ResponseBody
-    public ReturnData delete(@RequestBody Jobpos jobpos, Model model, HttpServletRequest request) {
-        return jobposService.delete(jobpos);//执行删除 Jobpos  操作
+    public ReturnData delete(@RequestBody Attendance attendance, Model model, HttpServletRequest request) {
+        return attendanceService.delete(attendance);//执行删除 Attendance  操作
     }
 
     /**
-     * 对 jobpos 的数据批量删除操作
+     * 对 attendance 的数据批量删除操作
      * @param request 请求数据
      */
     @RequestMapping({ "/deleteBatch" })
@@ -140,27 +148,27 @@ public class JobposController {
             rd.setMsg("ids为空");
         }
         else {
-            rd = jobposService.deleteBatch(ids.split(","));
+            rd = attendanceService.deleteBatch(ids.split(","));
         }
         return rd;
     }
 
     /**
-     * 对 jobpos 的数据修改操作
-     * @param jobpos json 数据对象
+     * 对 attendance 的数据修改操作
+     * @param attendance json 数据对象
      * @param model spring model 操作
      * @param request 请求数据
      * @return ReturnData 通用数据对象
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST, consumes = "application/json")
     @ResponseBody
-    public ReturnData update(@RequestBody Jobpos jobpos, Model model, HttpServletRequest request) {
-        return jobposService.update(jobpos);//执行 Jobpos  操作
+    public ReturnData update(@RequestBody Attendance attendance, Model model, HttpServletRequest request) {
+        return attendanceService.update(attendance);//执行 Attendance  操作
     }
 
     /**
-     * 对 jobpos 的数据分页查询操作
-     * @param jobpos json 数据对象
+     * 对 attendance 的数据分页查询操作
+     * @param attendance json 数据对象
      * @param model spring model 操作
      * @param request 请求数据
      * @return ReturnData 通用数据对象
@@ -168,19 +176,19 @@ public class JobposController {
     @RequestMapping(value = "/select", method = RequestMethod.POST)
     @ResponseBody
     public JqGridJsonBean select(String GridParam, Model model, HttpServletRequest request) {
-        Jobpos jobpos = new Gson().fromJson(GridParam, Jobpos.class);//json 转对象
+        Attendance attendance = new Gson().fromJson(GridParam, Attendance.class);//json 转对象
 
         String page = request.getParameter("page");//第几页
         String rows = request.getParameter("rows");//一页有几行
         String order_by = request.getParameter("order_by");//排序
 
         //分页查询
-        return jobposService.select(page, rows, order_by, jobpos);
+        return attendanceService.select(page, rows, order_by, attendance);
     }
 
     /**
-     * 对 jobpos 的数据分页查询操作
-     * @param jobpos json 数据对象
+     * 对 attendance 的数据分页查询操作 - 关联查询
+     * @param attendance json 数据对象
      * @param model spring model 操作
      * @param request 请求数据
      * @return ReturnData 通用数据对象
@@ -188,52 +196,56 @@ public class JobposController {
     @RequestMapping(value = "/selectRelationData", method = RequestMethod.POST)
     @ResponseBody
     public JqGridJsonBean selectRelationData(String GridParam, Model model, HttpServletRequest request) {
-        Jobpos jobpos = new Gson().fromJson(GridParam, Jobpos.class);//json 转对象
+        Attendance attendance = new Gson().fromJson(GridParam, Attendance.class);//json 转对象
 
         String page = request.getParameter("page");//第几页
         String rows = request.getParameter("rows");//一页有几行
         String order_by = request.getParameter("order_by");//排序
 
         //分页查询
-        return jobposService.selectRelationData(page, rows, order_by, jobpos);
-    }
-
-    @RequestMapping({ "/ajaxSelectJobposByDeptId" })
-    @ResponseBody
-    public ReturnData ajaxSelectJobposByDeptId(HttpServletRequest request) {
-        String deptId = request.getParameter("deptId");//
-        return jobposService.ajaxSelectJobposByDeptId(deptId);
-    }
-
-    @RequestMapping({ "/ajaxSelectJobposById" })
-    @ResponseBody
-    public ReturnData ajaxSelectJobposById(HttpServletRequest request) {
-        String id = request.getParameter("id");
-
-        Jobpos jobpos = new Jobpos();
-        jobpos.setId(Integer.valueOf(Integer.parseInt(id)));
-
-        return jobposService.selectByParam(null, jobpos);
+        return attendanceService.selectRelationData(page, rows, order_by, attendance);
     }
 
     /**
-     * 对 jobpos 的数据查询操作不分页
-     * @param jobpos json 数据对象
+     * 对 attendance 的数据分页查询操作 - 关联查询
+     * @param attendance json 数据对象
+     * @param model spring model 操作
+     * @param request 请求数据
+     * @return ReturnData 通用数据对象
+     */
+    @RequestMapping(value = "/selectRelationDataByEmpRealname", method = RequestMethod.POST)
+    @ResponseBody
+    public JqGridJsonBean selectRelationDataByEmpRealname(String GridParam, Model model, HttpServletRequest request) {
+        Attendance attendance = new Gson().fromJson(GridParam, Attendance.class);//json 转对象
+
+        String page = request.getParameter("page");//第几页
+        String rows = request.getParameter("rows");//一页有几行
+        String order_by = request.getParameter("order_by");//排序
+
+        String empRealname = request.getParameter("empRealname");//
+
+        //分页查询
+        return attendanceService.selectRelationDataByEmpRealname(page, rows, order_by, attendance, empRealname);
+    }
+
+    /**
+     * 对 attendance 的数据查询操作不分页
+     * @param attendance json 数据对象
      * @param model spring model 操作
      * @param request 请求数据
      * @return ReturnData 通用数据对象
      */
     @RequestMapping(value = "/selectByParam", method = RequestMethod.POST, consumes = "application/json")
     @ResponseBody
-    public ReturnData selectByParam(@RequestBody Jobpos jobpos, Model model, HttpServletRequest request) {
+    public ReturnData selectByParam(@RequestBody Attendance attendance, Model model, HttpServletRequest request) {
         String order_by = request.getParameter("order_by");//排序
 
-        return jobposService.selectByParam(order_by, jobpos);
+        return attendanceService.selectByParam(order_by, attendance);
     }
 
     /**
-     * 对 jobpos 的数据导出操作
-     * @param jobpos json 数据对象
+     * 对 attendance 的数据导出操作
+     * @param attendance json 数据对象
      * @param model spring model 操作
      * @param request 请求数据
      * @return ReturnData 通用数据对象
@@ -242,46 +254,42 @@ public class JobposController {
     public void export(HttpServletRequest request, HttpServletResponse response) {
         //1、使用JSONObject
         String json = request.getParameter("json");
-        Jobpos jobpos = new Gson().fromJson(json, Jobpos.class);
+        Attendance attendance = new Gson().fromJson(json, Attendance.class);
 
         String page = request.getParameter("page");//第几页
         String rows = request.getParameter("rows");//一页有几行
         String order_by = request.getParameter("order_by");//排序
         //分页查询
-        JqGridJsonBean rd = jobposService.select(page, rows, order_by, jobpos);
+        JqGridJsonBean rd = attendanceService.select(page, rows, order_by, attendance);
 
         //创建HSSFWorkbook对象(excel的文档对象)  
         HSSFWorkbook wb = new HSSFWorkbook();
         //建立新的sheet对象（excel的表单）  
-        HSSFSheet sheet = wb.createSheet("jobpos");
+        HSSFSheet sheet = wb.createSheet("attendance");
         //在sheet里创建第一行，参数为行索引(excel的行)，可以是0～65535之间的任何一个  
         HSSFRow row1 = sheet.createRow(0);
 
         //创建单元格并设置单元格内容  
         row1.createCell(1 - 1).setCellValue("主键");
-        row1.createCell(2 - 1).setCellValue("职位名称");
-        row1.createCell(3 - 1).setCellValue("职位编码");
-        row1.createCell(4 - 1).setCellValue("职位层级");
-        row1.createCell(5 - 1).setCellValue("所属部门");
-        row1.createCell(6 - 1).setCellValue("创建时间");
+        row1.createCell(2 - 1).setCellValue("所属员工");
+        row1.createCell(3 - 1).setCellValue("考勤状态 - 0-缺勤(旷工) - 1-正常 2-迟到 3-请假 4-调休");
+        row1.createCell(4 - 1).setCellValue("考核日期");
         //在sheet里创建第三行  
         @SuppressWarnings("unchecked")
-        List<Jobpos> maps = (List<Jobpos>) rd.getRoot();
+        List<Attendance> maps = (List<Attendance>) rd.getRoot();
         for (int i = 0; i < maps.size(); i++) {
-            Jobpos map = maps.get(i);
+            Attendance map = maps.get(i);
             HSSFRow row = sheet.createRow(i + 1);
             row.createCell(1 - 1).setCellValue(map.getId() + "");
-            row.createCell(2 - 1).setCellValue(map.getJobposName() + "");
-            row.createCell(3 - 1).setCellValue(map.getJobposCode() + "");
-            row.createCell(4 - 1).setCellValue(map.getJobposLevel() + "");
-            row.createCell(5 - 1).setCellValue(map.getDeptId() + "");
-            row.createCell(6 - 1).setCellValue(map.getCreateTime() + "");
+            row.createCell(2 - 1).setCellValue(map.getEmpId() + "");
+            row.createCell(3 - 1).setCellValue(map.getAttdState() + "");
+            row.createCell(4 - 1).setCellValue(map.getCreateTime() + "");
         }
 
         //输出Excel文件  
         try {
             ServletOutputStream output = response.getOutputStream();
-            String fileName = new String(("导出jobpos").getBytes(), "ISO8859_1");
+            String fileName = new String(("导出attendance").getBytes(), "ISO8859_1");
             response.setHeader("Content-disposition", "attachment; filename=" + fileName + ".xls");
             response.setContentType("application/binary;charset=utf-8");
             wb.write(output);
@@ -295,8 +303,8 @@ public class JobposController {
     }
 
     /**
-     * 对 jobpos 的数据导入操作
-     * @param jobpos json 数据对象
+     * 对 attendance 的数据导入操作
+     * @param attendance json 数据对象
      * @param model spring model 操作
      * @param request 请求数据
      * @return ReturnData 通用数据对象
@@ -325,11 +333,11 @@ public class JobposController {
             if (sheet != null) {
                 for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
                     Row row = sheet.getRow(i);
-                    Jobpos jobpos = new Jobpos();
+                    Attendance attendance = new Attendance();
                     //System.out.println(row.getCell(0));
                     //此处自己添字段例如 myTable.set...(row.getCell(0))
 
-                    //jobposService.insert(jobpos);  
+                    //attendanceService.insert(attendance);  
                 }
 
             }

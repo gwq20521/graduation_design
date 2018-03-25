@@ -92,14 +92,12 @@
 			<if test="realname != null and realname != ''">
                 realname = #{realname,jdbcType=VARCHAR},
             </if>
-			<if test="entryTime != null and entryTime != ''">
+			<if test="entryTime != null">
                 entry_time = #{entryTime,jdbcType=DATE},
+				<!-- date(entry_time) = date(#{entry_time,jdbcType=DATE}),  and entryTime != '' -->
             </if>
 			<if test="jobposId != null and jobposId != ''">
                 jobpos_id = #{jobposId,jdbcType=INTEGER},
-            </if>
-			<if test="registerTime != null and registerTime != ''">
-                register_time = #{registerTime,jdbcType=TIMESTAMP},
             </if>
     	</set>
     	where id = #{id,jdbcType=INTEGER}
@@ -140,7 +138,7 @@
     </select>
     
     <select id="selectData" resultMap="BaseResultMap" parameterType="com.design.graduation.model.Employee">
-    	select 
+    	select id,
 			<include refid="Base_Column_List" />
 		from employee 
 		<if test="_parameter != null">
@@ -175,9 +173,80 @@
         </if>
         order by ${order_by} desc limit #{limit} offset #{offset}
     </select>
+    
+    <select id="selectRelationCount" resultType="java.lang.Integer" parameterType="com.design.graduation.model.Employee">
+    	select count(*) from employee 
+		<if test="_parameter != null">
+            <where>
+            <trim suffixOverrides="and">
+			<if test="id != null and id != ''">
+                id = #{id,jdbcType=INTEGER} and
+            </if>
+			<if test="empCode != null and empCode != ''">
+                emp_code = #{empCode,jdbcType=VARCHAR} and
+            </if>
+			<if test="loginname != null and loginname != ''">
+                loginname LIKE CONCAT(CONCAT('%', #{loginname,jdbcType=VARCHAR}), '%') and
+            </if>
+			<if test="password != null and password != ''">
+                password = #{password,jdbcType=VARCHAR} and
+            </if>
+			<if test="realname != null and realname != ''">
+                realname LIKE CONCAT(CONCAT('%', #{realname,jdbcType=VARCHAR}), '%') and
+            </if>
+			<if test="entryTime != null and entryTime != ''">
+                entry_time = #{entryTime,jdbcType=DATE} and
+            </if>
+			<if test="jobposId != null and jobposId != ''">
+                jobpos_id = #{jobposId,jdbcType=INTEGER} and
+            </if>
+			<if test="registerTime != null and registerTime != ''">
+                register_time = #{registerTime,jdbcType=TIMESTAMP} and
+            </if>
+            </trim>
+            </where>
+        </if>
+    </select>
+    
+    <select id="selectRelationData" resultType="java.util.Map" parameterType="com.design.graduation.model.Employee">
+    	select e.*, j.jobpos_name
+		from employee e, jobpos j
+		<if test="_parameter != null">
+            <where>
+            <trim suffixOverrides="and">
+			<if test="employee.id != null and employee.id != ''">
+                e.id = #{employee.id,jdbcType=INTEGER} and
+            </if>
+			<if test="employee.empCode != null and employee.empCode != ''">
+                e.emp_code = #{employee.empCode,jdbcType=VARCHAR} and
+            </if>
+			<if test="employee.loginname != null and employee.loginname != ''">
+                e.loginname LIKE CONCAT(CONCAT('%', #{employee.loginname,jdbcType=VARCHAR}), '%') and
+            </if>
+			<if test="employee.password != null and employee.password != ''">
+                e.password = #{employee.password,jdbcType=VARCHAR} and
+            </if>
+			<if test="employee.realname != null and employee.realname != ''">
+                e.realname LIKE CONCAT(CONCAT('%', #{employee.realname,jdbcType=VARCHAR}), '%') and
+            </if>
+			<if test="employee.entryTime != null and employee.entryTime != ''">
+                e.entry_time = #{employee.entryTime,jdbcType=DATE} and
+            </if>
+			<if test="employee.jobposId != null and employee.jobposId != ''">
+                e.jobpos_id = #{employee.jobposId,jdbcType=INTEGER} and
+            </if>
+			<if test="employee.registerTime != null and employee.registerTime != ''">
+                e.register_time = #{employee.registerTime,jdbcType=TIMESTAMP} and
+            </if>
+			e.jobpos_id = j.id and
+            </trim>
+            </where>
+        </if>
+        order by ${order_by} desc limit #{limit} offset #{offset}
+    </select>
 	
 	<select id="selectByParam" resultMap="BaseResultMap" parameterType="com.design.graduation.model.Employee">
-    	select 
+    	select id,
 			<include refid="Base_Column_List" />
 		from employee 
 		<if test="_parameter != null">
@@ -216,6 +285,14 @@
 	<!-- 查询设备类型和设备类型ID 的 全查操作 -->
 	<select id="ajaxSelectMaxEmpCode" resultType="java.lang.String">
 		select MAX(emp_code) from employee;
+	</select>
+	
+	<select id="ajaxSelectEmpByJobposId" resultType="java.util.Map">
+		select id,realname from employee WHERE jobpos_id=${jobposId};
+	</select>
+	
+	<select id="selectRealnameById" resultType="java.lang.String">
+		select realname from employee WHERE id=${id};
 	</select>
 	
 </mapper>

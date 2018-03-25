@@ -62,4 +62,6 @@ public interface JobposService {
     ReturnData selectByParam(String order_by, Jobpos jobpos);
 
     ReturnData ajaxSelectJobposByDeptId(String deptId);
+
+    JqGridJsonBean selectRelationData(String page, String rows, String order_by, Jobpos jobpos);
 }

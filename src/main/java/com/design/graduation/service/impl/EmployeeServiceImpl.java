@@ -197,4 +197,60 @@ public class EmployeeServiceImpl implements EmployeeService {
         return rd;
     }
 
+    @Override
+    public JqGridJsonBean selectRelationData(String page, String rows, String order_by, Employee employee) {
+        JqGridJsonBean jgjb = new JqGridJsonBean();
+        try {
+            int _page = Integer.parseInt(page);
+            int _rows = Integer.parseInt(rows);
+            //没有order_by 默认主键排序
+            if (order_by != null && !"".equals(order_by)) {
+                //不变
+            }
+            else {
+                order_by = "id";
+            }
+
+            //查询Employee总数据量
+            int count = employeeMapper.selectRelationCount(employee);
+            //根据查询条件查询总页数
+            int pages = (count % Integer.parseInt(rows)) == 0 ? (count / _rows) : ((count / _rows) + 1);
+            List<Map<String, Object>> data = employeeMapper.selectRelationData(employee, _rows, (_page - 1) * _rows,
+                    order_by);
+            jgjb.setPage(_page);// 第几页
+            jgjb.setRecords(count);// 总数据量
+            jgjb.setTotal(pages);// 总页数
+            jgjb.setRoot(data);// 查询数据信息
+        }
+        catch (Exception e) {
+            logger.error(e.getMessage());
+            //执行插入操作异常,返回错误信息
+        }
+        return jgjb;
+    }
+
+    @Override
+    public ReturnData ajaxSelectEmpByJobposId(String jobposId) {
+        ReturnData rd = new ReturnData();
+        try {
+            List<Map<Integer, String>> data = employeeMapper.ajaxSelectEmpByJobposId(jobposId);
+            Map<String, Object> dataMap = new HashMap<String, Object>();
+            dataMap.put("data", data);
+            rd.setCode("OK");
+            rd.setData(dataMap);
+        }
+        catch (Exception e) {
+            this.logger.error(e.getMessage());
+
+            rd.setCode("ERROR");
+            rd.setMsg(e.getMessage());
+        }
+        return rd;
+    }
+
+    @Override
+    public String selectRealnameById(Integer id) {
+        return employeeMapper.selectRealnameById(id);
+    }
+
 }

@@ -27,22 +27,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		.amap-sug-result{
 			z-index:100000;
 		}
-		
-		.isDisClaI,.isDisClaL {
-			display:inline-block;
-			float:left;
-			margin-left: 10px;
-			margin-right: 30px;
-		}
-		.isDisClaL {
-			margin-top: -2px;
-		}
-		
 		#fieldHidden{
 			display: none;
 		}
 	</style>
 	
+	<script type="text/javascript">
+		var olddata = JSON.parse('${olddata}');
+
+	</script>
+
 </head>
    
 <body>
@@ -50,9 +44,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<!--头部内容-->
     <div class="header">
         <ol class="breadcrumb">
-            <li>人事信息管理</li>
+            <li>工作管理</li>
             <li>></li>
-            <li class="active">部门信息新增</li>
+            <li class="active">考勤数据修改</li>
         </ol>
     </div>
     <!--提示必填项部分-->
@@ -75,38 +69,40 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         </div>
         <div class="panel-body pad-tb-25" id="jcxx">
         	 <div class="row">
-				
+			 
+             <!-- 以下为隐藏字段值 -->
+             <div id="fieldHidden">
+            
 				<div class="col-xs-6 row ie-col-6">
-                    <span class="col-xs-3 glyphicon">* 部门编码：
+                    <span class="col-xs-3 glyphicon">* 自增id：
                     </span>
                     <div class="col-xs-9 pad-0 row">
-                        <input type="text" class="col-xs-12 GL-add-require" id="deptCode" value="">
-                    </div>
-                </div>
-				<div class="col-xs-6 row ie-col-6">
-                    <span class="col-xs-3 glyphicon">* 部门名称：
-                    </span>
-                    <div class="col-xs-9 pad-0 row">
-                        <input type="text" class="col-xs-12 GL-add-require" id="deptname" value="">
-                    </div>
-                </div>
-				<div class="col-xs-6 row ie-col-6">
-                    <span class="col-xs-3 glyphicon">* 部门信息：
-                    </span>
-                    <div class="col-xs-9 pad-0 row">
-                        <input type="text" class="col-xs-12 GL-add-require" id="deptinfo" value="">
+                        <%-- <input type="text" class="col-xs-12 GL-add-require" id="id" value="<%=request.getParameter("id") %>"> --%>
+                        <input type="text" class="col-xs-12 GL-add-require" id="id" value="">
                     </div>
                 </div>
                 
+             </div>
+                
 				<div class="col-xs-6 row ie-col-6">
-                    <span class="col-xs-3 glyphicon">* 是否可分配
+                    <span class="col-xs-3 glyphicon">* 所属员工：
                     </span>
                     <div class="col-xs-9 pad-0 row">
-                        <!-- <input type="text" class="col-xs-12 GL-add-require" id="isDis" value=""> -->
-                        
-                        <input type="radio" name="isDisName" id="isDisId" class="isDisClaI" value="1" checked/><label class="isDisClaL" for="isDisId">是</label>
-                        
-                        <input type="radio" name="isDisName" id="isDisNotId" class="isDisClaI" value="2"/><label class="isDisClaL" for="isDisNotId">否</label>
+                        <input type="text" class="col-xs-12 GL-add-require" id="empId" value="">
+                    </div>
+                </div>
+				<div class="col-xs-6 row ie-col-6">
+                    <span class="col-xs-3 glyphicon">* 考勤状态 - 0-缺勤(旷工) - 1-正常 2-迟到 3-请假 4-调休：
+                    </span>
+                    <div class="col-xs-9 pad-0 row">
+                        <input type="text" class="col-xs-12 GL-add-require" id="attdState" value="">
+                    </div>
+                </div>
+				<div class="col-xs-6 row ie-col-6">
+                    <span class="col-xs-3 glyphicon">* 考核日期：
+                    </span>
+                    <div class="col-xs-9 pad-0 row">
+                        <input type="text" class="col-xs-12 GL-add-require" id="createTime" value="">
                     </div>
                 </div>
         	 	
@@ -119,27 +115,26 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </body>
 
 <script type="text/javascript">
+var attendanceParam = {};
+	attendanceParam.id;
+	attendanceParam.empId;
+	attendanceParam.attdState;
+	attendanceParam.createTime;
 
-var departmentParam = {};
-	departmentParam.deptCode;
-	departmentParam.deptname;
-	departmentParam.deptinfo;
-	departmentParam.isDis;
+	$("#id").val(olddata.id);
+	$("#empId").val(olddata.empId);
+	$("#attdState").val(olddata.attdState);
+	$("#createTime").val(olddata.createTime);
 
 	$("#save").click(function(){
-		var param = JSON.parse(JSON.stringify(departmentParam));
+		var param = JSON.parse(JSON.stringify(attendanceParam));
 		
-					param.deptCode=$("#deptCode").val();
-					param.deptname=$("#deptname").val();
-					param.deptinfo=$("#deptinfo").val();
-					
-					var isDis = $("input[name='isDisName']:checked").val();
-
-					param.isDis=isDis;
-					
-			//部门编码不可重复
+					param.id=$("#id").val();
+					param.empId=$("#empId").val();
+					param.attdState=$("#attdState").val();
+					param.createTime=$("#createTime").val();
 				
-	    $.ajax({url:'<%=path %>/department/insert',
+	    $.ajax({url:'<%=path %>/attendance/update',
        		type:'post',
        		cache:false,
        		dataType:'json',
@@ -147,8 +142,8 @@ var departmentParam = {};
        		contentType: "application/json;charset=UTF-8",
            	success:function(data){
            		if(data.code == "OK"){
-           			alert("数据保存成功");
-               		window.location.href= "<%=path %>/department/show";
+           			alert("数据修改成功");
+               		window.location.href= "<%=path %>/attendance/show";
            		} else {
            			alert(data.msg);
            		}
@@ -160,7 +155,7 @@ var departmentParam = {};
 	});
 	
 	$("#back").click(function(){
-		window.location.href= "<%=path %>/department/show";
+		window.location.href= "<%=path %>/attendance/show";
 	});
 
 </script>

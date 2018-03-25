@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSON;
 import com.design.graduation.model.Department;
 import com.design.graduation.service.DepartmentService;
 import com.design.graduation.util.JqGridJsonBean;
@@ -85,6 +86,17 @@ public class DepartmentController {
     @RequiresPermissions(value = "department_edit")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String edit(Model model, HttpServletRequest request) {
+        String id = request.getParameter("id");
+
+        Department department = new Department();
+        department.setId(Integer.valueOf(Integer.parseInt(id)));
+
+        ReturnData rd = departmentService.selectByParam(null, department);
+        if (rd.getCode().equals("OK")) {
+            List<Department> data = (List<Department>) rd.getData().get("data");
+
+            model.addAttribute("olddata", JSON.toJSONString(data.get(0)));
+        }
         return "department/edit";
     }
 
@@ -219,6 +231,7 @@ public class DepartmentController {
         row1.createCell(3 - 1).setCellValue("部门名称");
         row1.createCell(4 - 1).setCellValue("部门信息");
         row1.createCell(5 - 1).setCellValue("创建时间");
+        row1.createCell(6 - 1).setCellValue("是否能直接分配所属工作-1-分配，2-不分配");
         //在sheet里创建第三行  
         @SuppressWarnings("unchecked")
         List<Department> maps = (List<Department>) rd.getRoot();
@@ -230,6 +243,7 @@ public class DepartmentController {
             row.createCell(3 - 1).setCellValue(map.getDeptname() + "");
             row.createCell(4 - 1).setCellValue(map.getDeptinfo() + "");
             row.createCell(5 - 1).setCellValue(map.getCreateTime() + "");
+            row.createCell(6 - 1).setCellValue(map.getIsDis() + "");
         }
 
         //输出Excel文件  

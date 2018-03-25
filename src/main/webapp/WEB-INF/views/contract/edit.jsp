@@ -27,22 +27,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		.amap-sug-result{
 			z-index:100000;
 		}
-		
-		.isDisClaI,.isDisClaL {
-			display:inline-block;
-			float:left;
-			margin-left: 10px;
-			margin-right: 30px;
-		}
-		.isDisClaL {
-			margin-top: -2px;
-		}
-		
 		#fieldHidden{
 			display: none;
 		}
 	</style>
 	
+	<script type="text/javascript">
+		var olddata = JSON.parse('${olddata}');
+
+	</script>
+
 </head>
    
 <body>
@@ -50,9 +44,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<!--头部内容-->
     <div class="header">
         <ol class="breadcrumb">
-            <li>人事信息管理</li>
+            <li><a>首页</a></li>
             <li>></li>
-            <li class="active">部门信息新增</li>
+            <li><a>***</a></li>
+            <li>></li>
+            <li><a>***</a></li>
+            <li>></li>
+            <li class="active">**修改</li>
         </ol>
     </div>
     <!--提示必填项部分-->
@@ -73,82 +71,92 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				
             </div>
         </div>
+        
+<form id="uploadForm" enctype="multipart/form-data">  
+        
         <div class="panel-body pad-tb-25" id="jcxx">
         	 <div class="row">
-				
+			 
+             <!-- 以下为隐藏字段值 -->
+             <div id="fieldHidden">
+            
 				<div class="col-xs-6 row ie-col-6">
-                    <span class="col-xs-3 glyphicon">* 部门编码：
+                    <span class="col-xs-3 glyphicon">* 自增id：
                     </span>
                     <div class="col-xs-9 pad-0 row">
-                        <input type="text" class="col-xs-12 GL-add-require" id="deptCode" value="">
+                        <%-- <input type="text" class="col-xs-12 GL-add-require" id="id" value="<%=request.getParameter("id") %>"> --%>
+                        <input type="text" class="col-xs-12 GL-add-require" id="id" name="idName" value="">
                     </div>
                 </div>
+                
+             </div>
+                
 				<div class="col-xs-6 row ie-col-6">
-                    <span class="col-xs-3 glyphicon">* 部门名称：
+                    <span class="col-xs-3 glyphicon">* 所属员工：
                     </span>
                     <div class="col-xs-9 pad-0 row">
-                        <input type="text" class="col-xs-12 GL-add-require" id="deptname" value="">
-                    </div>
-                </div>
-				<div class="col-xs-6 row ie-col-6">
-                    <span class="col-xs-3 glyphicon">* 部门信息：
-                    </span>
-                    <div class="col-xs-9 pad-0 row">
-                        <input type="text" class="col-xs-12 GL-add-require" id="deptinfo" value="">
+                        <select id="empId" name="empIdName" style="width:200px;" >
+                        </select>
                     </div>
                 </div>
                 
 				<div class="col-xs-6 row ie-col-6">
-                    <span class="col-xs-3 glyphicon">* 是否可分配
+                    <span class="col-xs-3 glyphicon">* 合同上传：
                     </span>
-                    <div class="col-xs-9 pad-0 row">
-                        <!-- <input type="text" class="col-xs-12 GL-add-require" id="isDis" value=""> -->
-                        
-                        <input type="radio" name="isDisName" id="isDisId" class="isDisClaI" value="1" checked/><label class="isDisClaL" for="isDisId">是</label>
-                        
-                        <input type="radio" name="isDisName" id="isDisNotId" class="isDisClaI" value="2"/><label class="isDisClaL" for="isDisNotId">否</label>
-                    </div>
+                    <form name="Form2" action="/SpringMVC006/springUpload" method="post"  enctype="multipart/form-data">
+						<input type="file" name="contractFileName" id="f_upload" class="file" />
+					</form>
                 </div>
-        	 	
+                
                 
         	 </div>
         </div>
 	
+</form>
+        
 	</div>
 </div>
 </body>
 
 <script type="text/javascript">
+var contractParam = {};
+	contractParam.id;
+	contractParam.empId;
 
-var departmentParam = {};
-	departmentParam.deptCode;
-	departmentParam.deptname;
-	departmentParam.deptinfo;
-	departmentParam.isDis;
+	$("#id").val(olddata.id);
+
+	//员工姓名的回显
+	$.ajax({
+		url:'<%=path %>/employee/ajaxSelectEmpById',
+   		type:'post',
+   		cache:false,
+   		dataType:'json',
+   		data: {"empId":olddata.empId},
+       	success:function(data){
+       		var list = data.data.data;
+		    $("#empId").html("<option value='"+olddata.empId+"'>"+list+"</option>");
+       	}, 
+       	error:function() {
+       		alert("异常！");
+       	}
+    });
 
 	$("#save").click(function(){
-		var param = JSON.parse(JSON.stringify(departmentParam));
-		
-					param.deptCode=$("#deptCode").val();
-					param.deptname=$("#deptname").val();
-					param.deptinfo=$("#deptinfo").val();
-					
-					var isDis = $("input[name='isDisName']:checked").val();
 
-					param.isDis=isDis;
-					
-			//部门编码不可重复
-				
-	    $.ajax({url:'<%=path %>/department/insert',
+		var formData = new FormData($('#uploadForm')[0]);
+		
+	    $.ajax({url:'<%=path %>/contract/update',
        		type:'post',
+            data: formData, 
        		cache:false,
-       		dataType:'json',
-       		data: JSON.stringify(param),
-       		contentType: "application/json;charset=UTF-8",
+       		data: formData,
+       		//JSON.stringify(param),
+            processData: false,  
+            contentType: false, 
            	success:function(data){
            		if(data.code == "OK"){
-           			alert("数据保存成功");
-               		window.location.href= "<%=path %>/department/show";
+           			alert("数据修改成功");
+               		window.location.href= "<%=path %>/contract/show";
            		} else {
            			alert(data.msg);
            		}
@@ -160,7 +168,7 @@ var departmentParam = {};
 	});
 	
 	$("#back").click(function(){
-		window.location.href= "<%=path %>/department/show";
+		window.location.href= "<%=path %>/contract/show";
 	});
 
 </script>

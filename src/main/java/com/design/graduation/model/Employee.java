@@ -7,6 +7,7 @@
 package com.design.graduation.model;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import org.apache.ibatis.type.Alias;
 
@@ -21,90 +22,98 @@ public class Employee {
 
     /** 主键 */
     private Integer id;
+
     /** 员工编码 */
     private String empCode;
+
     /** 用户名 */
     private String loginname;
+
     /** 用户密码 */
     private String password;
+
     /** 真实姓名 */
     private String realname;
+
     /** 入职时间 */
     private Date entryTime;
+
     /** 所属职位 */
     private Integer jobposId;
+
     /** 注册时间 */
-    private Date registerTime;
+    private Timestamp registerTime;
 
-
-    public Integer getId(){
+    public Integer getId() {
         return this.id;
     }
-    public void setId(Integer id){
+
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getEmpCode(){
+    public String getEmpCode() {
         return this.empCode;
     }
-    public void setEmpCode(String empCode){
+
+    public void setEmpCode(String empCode) {
         this.empCode = empCode;
     }
 
-    public String getLoginname(){
+    public String getLoginname() {
         return this.loginname;
     }
-    public void setLoginname(String loginname){
+
+    public void setLoginname(String loginname) {
         this.loginname = loginname;
     }
 
-    public String getPassword(){
+    public String getPassword() {
         return this.password;
     }
-    public void setPassword(String password){
+
+    public void setPassword(String password) {
         this.password = password;
     }
 
-    public String getRealname(){
+    public String getRealname() {
         return this.realname;
     }
-    public void setRealname(String realname){
+
+    public void setRealname(String realname) {
         this.realname = realname;
     }
 
-    public Date getEntryTime(){
+    public Date getEntryTime() {
         return this.entryTime;
     }
-    public void setEntryTime(Date entryTime){
+
+    public void setEntryTime(Date entryTime) {
         this.entryTime = entryTime;
     }
 
-    public Integer getJobposId(){
+    public Integer getJobposId() {
         return this.jobposId;
     }
-    public void setJobposId(Integer jobposId){
+
+    public void setJobposId(Integer jobposId) {
         this.jobposId = jobposId;
     }
 
-    public Date getRegisterTime(){
+    public Timestamp getRegisterTime() {
         return this.registerTime;
     }
-    public void setRegisterTime(Date registerTime){
+
+    public void setRegisterTime(Timestamp registerTime) {
         this.registerTime = registerTime;
     }
- 	@Override
+
+    @Override
     public String toString() {
-    String toString = "Employee ["+
-    					"id = "+id+","+
-						"emp_code = "+empCode+","+
-						"loginname = "+loginname+","+
-						"password = "+password+","+
-						"realname = "+realname+","+
-						"entry_time = "+entryTime+","+
-						"jobpos_id = "+jobposId+","+
-						"register_time = "+registerTime+","+
-						"]";
+        String toString = "Employee [" + "id = " + id + "," + "emp_code = " + empCode + "," + "loginname = " + loginname
+                + "," + "password = " + password + "," + "realname = " + realname + "," + "entry_time = " + entryTime
+                + "," + "jobpos_id = " + jobposId + "," + "register_time = " + registerTime + "," + "]";
         return toString;
-	}
+    }
 
 }

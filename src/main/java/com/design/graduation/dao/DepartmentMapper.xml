@@ -7,12 +7,14 @@
 	    	<result column="deptname" property="deptname" jdbcType="VARCHAR" />
 	    	<result column="deptinfo" property="deptinfo" jdbcType="VARCHAR" />
 	    	<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    	<result column="is_dis" property="isDis" jdbcType="INTEGER" />
 		</resultMap>
 	<sql id="Base_Column_List" >
 			dept_code,
 			deptname,
 			deptinfo,
-			create_time
+			create_time,
+			is_dis
 	</sql>
 	
 	
@@ -20,11 +22,11 @@
         insert into department (
 			<include refid="Base_Column_List" />
 		)values(
-			NOW(),
         	#{deptCode,jdbcType=VARCHAR},
         	#{deptname,jdbcType=VARCHAR},
         	#{deptinfo,jdbcType=VARCHAR},
 			NOW(),
+        	#{isDis,jdbcType=INTEGER}
         )
     </insert>
     
@@ -47,6 +49,9 @@
             </if>
 			<if test="createTime != null and createTime != ''">
                 create_time = #{createTime,jdbcType=TIMESTAMP} and
+            </if>
+			<if test="isDis != null and isDis != ''">
+                is_dis = #{isDis,jdbcType=INTEGER} and
             </if>
             </trim>
             </where>
@@ -75,6 +80,9 @@
 			<if test="createTime != null and createTime != ''">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
+			<if test="isDis != null and isDis != ''">
+                is_dis = #{isDis,jdbcType=INTEGER},
+            </if>
     	</set>
     	where id = #{id,jdbcType=INTEGER}
     </update>
@@ -91,13 +99,17 @@
                 dept_code = #{deptCode,jdbcType=VARCHAR} and
             </if>
 			<if test="deptname != null and deptname != ''">
-                deptname = #{deptname,jdbcType=VARCHAR} and
+                <!-- deptname = #{deptname,jdbcType=VARCHAR} and -->
+                deptname LIKE CONCAT(CONCAT('%', #{deptname,jdbcType=VARCHAR}), '%') and
             </if>
 			<if test="deptinfo != null and deptinfo != ''">
                 deptinfo = #{deptinfo,jdbcType=VARCHAR} and
             </if>
 			<if test="createTime != null and createTime != ''">
                 create_time = #{createTime,jdbcType=TIMESTAMP} and
+            </if>
+			<if test="isDis != null and isDis != ''">
+                is_dis = #{isDis,jdbcType=INTEGER} and
             </if>
             </trim>
             </where>
@@ -118,13 +130,17 @@
                 dept_code = #{department.deptCode,jdbcType=VARCHAR} and
             </if>
 			<if test="department.deptname != null and department.deptname != ''">
-                deptname = #{department.deptname,jdbcType=VARCHAR} and
+                <!-- deptname = #{department.deptname,jdbcType=VARCHAR} and -->
+                deptname LIKE CONCAT(CONCAT('%', #{department.deptname,jdbcType=VARCHAR}), '%') and
             </if>
 			<if test="department.deptinfo != null and department.deptinfo != ''">
                 deptinfo = #{department.deptinfo,jdbcType=VARCHAR} and
             </if>
 			<if test="department.createTime != null and department.createTime != ''">
                 create_time = #{department.createTime,jdbcType=TIMESTAMP} and
+            </if>
+			<if test="department.isDis != null and department.isDis != ''">
+                is_dis = #{department.isDis,jdbcType=INTEGER} and
             </if>
             </trim>
             </where>
@@ -154,6 +170,9 @@
 			<if test="department.createTime != null and department.createTime != ''">
                 create_time = #{department.createTime,jdbcType=TIMESTAMP} and
             </if>
+			<if test="department.isDis != null and department.isDis != ''">
+                is_dis = #{department.isDis,jdbcType=INTEGER} and
+            </if>
             </trim>
             </where>
         </if>
@@ -162,7 +181,7 @@
     
 	<!-- 查询设备类型和设备类型ID 的 全查操作 -->
 	<select id="ajaxSelectDept" resultType="java.util.Map">
-		select id,deptname from department;
+		select id,deptname from department WHERE is_dis = 1;
 	</select>
 	
 </mapper>

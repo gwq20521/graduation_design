@@ -7,7 +7,9 @@
 package com.design.graduation.controller;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
@@ -32,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSON;
 import com.design.graduation.model.Employee;
 import com.design.graduation.service.EmployeeService;
 import com.design.graduation.util.JqGridJsonBean;
@@ -85,6 +88,17 @@ public class EmployeeController {
     @RequiresPermissions(value = "employee_edit")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String edit(Model model, HttpServletRequest request) {
+        String id = request.getParameter("id");
+
+        Employee employee = new Employee();
+        employee.setId(Integer.valueOf(Integer.parseInt(id)));
+
+        ReturnData rd = employeeService.selectByParam(null, employee);
+        if (rd.getCode().equals("OK")) {
+            List<Employee> data = (List<Employee>) rd.getData().get("data");
+
+            model.addAttribute("olddata", JSON.toJSONString(data.get(0)));
+        }
         return "employee/edit";
     }
 
@@ -164,6 +178,26 @@ public class EmployeeController {
 
         //分页查询
         return employeeService.select(page, rows, order_by, employee);
+    }
+
+    /**
+     * 对 employee 的数据分页查询操作
+     * @param employee json 数据对象
+     * @param model spring model 操作
+     * @param request 请求数据
+     * @return ReturnData 通用数据对象
+     */
+    @RequestMapping(value = "/selectRelationData", method = RequestMethod.POST)
+    @ResponseBody
+    public JqGridJsonBean selectRelationData(String GridParam, Model model, HttpServletRequest request) {
+        Employee employee = new Gson().fromJson(GridParam, Employee.class);//json 转对象
+
+        String page = request.getParameter("page");//第几页
+        String rows = request.getParameter("rows");//一页有几行
+        String order_by = request.getParameter("order_by");//排序
+
+        //分页查询
+        return employeeService.selectRelationData(page, rows, order_by, employee);
     }
 
     @RequestMapping({ "/ajaxSelectMaxEmpCode" })
@@ -304,4 +338,45 @@ public class EmployeeController {
         rd.setMsg("数据导入成功");
         return rd;
     }
+
+    /**
+     * 对 employee 的数据插入操作
+     * @param employee json 数据对象
+     * @param model spring model 操作
+     * @param request 请求数据
+     * @return ReturnData 通用数据对象
+     */
+    @RequestMapping(value = "/ajaxLoginname", method = RequestMethod.POST, consumes = "application/json")
+    @ResponseBody
+    public ReturnData ajaxLoginname(@RequestBody Employee employee, Model model, HttpServletRequest request) {
+        ReturnData rd = employeeService.selectByParam(null, employee);
+        List<Employee> data = (List<Employee>) rd.getData().get("data");
+        if (data.size() >= 1) {
+            rd.setCode("ERROR");
+            rd.setMsg("该用户名已存在，请修改");
+        }
+        return rd;//执行插入 Employee 操作
+    }
+
+    @RequestMapping({ "/ajaxSelectEmpByJobposId" })
+    @ResponseBody
+    public ReturnData ajaxSelectEmpByJobposId(HttpServletRequest request) {
+        String jobposId = request.getParameter("jobposId");//
+        return employeeService.ajaxSelectEmpByJobposId(jobposId);
+    }
+
+    @RequestMapping({ "/ajaxSelectEmpById" })
+    @ResponseBody
+    public ReturnData ajaxSelectEmpById(HttpServletRequest request) {
+        String empId = request.getParameter("empId");//
+        String empRealname = employeeService.selectRealnameById(Integer.valueOf(empId));
+
+        ReturnData rd = new ReturnData();
+        Map<String, Object> dataMap = new HashMap<String, Object>();
+        dataMap.put("data", empRealname);
+        rd.setCode("OK");
+        rd.setData(dataMap);
+        return rd;
+    }
+
 }

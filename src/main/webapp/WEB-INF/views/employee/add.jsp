@@ -40,13 +40,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <ol class="breadcrumb">
             <li>人事信息管理</li>
             <li>></li>
-            <li class="active">用户信息管理</li>
+            <li class="active">用户信息新增</li>
         </ol>
     </div>
     <!--提示必填项部分-->
 	<div class="filter panel panel-default">
 		<div class="panel-heading" style="border-bottom:0px;">
-			<span>温馨提示：带*的为必填部分，请核对完成后点击添加</span>
+			<span>温馨提示：带*的为必填部分，请核对完成后点击保存</span>
 			
 	<span type = "button" id ="save" class="save">保存</span>
 	<span type = "button" id= "back" class="back">返回</span>
@@ -238,17 +238,10 @@ var employeeParam = {};
 	employeeParam.registerTime;
 
 	$("#save").click(function(){
+		//首先需要判断用户名是否已经存在
 		var param = JSON.parse(JSON.stringify(employeeParam));
-		param.id=$("#id").val();
-		param.empCode=$("#empCode").val();
 		param.loginname=$("#loginname").val();
-		param.password=$("#password").val();
-		param.realname=$("#realname").val();
-		param.entryTime=$("#entryTime").val();
-		param.jobposId=$("#jobposId").val();
-		param.registerTime=$("#registerTime").val();
-		
-	    $.ajax({url:'<%=path %>/employee/insert',
+		$.ajax({url:'<%=path %>/employee/ajaxLoginname',
        		type:'post',
        		cache:false,
        		dataType:'json',
@@ -256,8 +249,33 @@ var employeeParam = {};
        		contentType: "application/json;charset=UTF-8",
            	success:function(data){
            		if(data.code == "OK"){
-           			alert("数据保存成功");
-               		window.location.href= "<%=path %>/employee/show";
+           			
+           			param.id=$("#id").val();
+           			param.empCode=$("#empCode").val();
+           			param.password=$("#password").val();
+           			param.realname=$("#realname").val();
+           			param.entryTime=$("#entryTime").val();
+           			param.jobposId=$("#jobposId").val();
+           			param.registerTime=$("#registerTime").val();
+           			
+           		    $.ajax({url:'<%=path %>/employee/insert',
+           	       		type:'post',
+           	       		cache:false,
+           	       		dataType:'json',
+           	       		data: JSON.stringify(param),
+           	       		contentType: "application/json;charset=UTF-8",
+           	           	success:function(data){
+           	           		if(data.code == "OK"){
+           	           			alert("数据保存成功");
+           	               		window.location.href= "<%=path %>/employee/show";
+           	           		} else {
+           	           			alert(data.msg);
+           	           		}
+           	           	},
+           	           	error : function() {
+           	           		alert("异常！");
+           	           	}
+           	       });
            		} else {
            			alert(data.msg);
            		}
@@ -265,7 +283,7 @@ var employeeParam = {};
            	error : function() {
            		alert("异常！");
            	}
-       });
+        });
 	});
 	
 	$("#back").click(function(){

@@ -21,60 +21,76 @@ public class Department {
 
     /** 主键 */
     private Integer id;
+
     /** 部门编码 */
     private String deptCode;
+
     /** 部门名称 */
     private String deptname;
+
     /** 部门信息 */
     private String deptinfo;
+
     /** 创建时间 */
     private Date createTime;
 
+    /** 是否能直接分配所属工作-1-分配，2-不分配 */
+    private Integer isDis;
 
-    public Integer getId(){
+    public Integer getId() {
         return this.id;
     }
-    public void setId(Integer id){
+
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getDeptCode(){
+    public String getDeptCode() {
         return this.deptCode;
     }
-    public void setDeptCode(String deptCode){
+
+    public void setDeptCode(String deptCode) {
         this.deptCode = deptCode;
     }
 
-    public String getDeptname(){
+    public String getDeptname() {
         return this.deptname;
     }
-    public void setDeptname(String deptname){
+
+    public void setDeptname(String deptname) {
         this.deptname = deptname;
     }
 
-    public String getDeptinfo(){
+    public String getDeptinfo() {
         return this.deptinfo;
     }
-    public void setDeptinfo(String deptinfo){
+
+    public void setDeptinfo(String deptinfo) {
         this.deptinfo = deptinfo;
     }
 
-    public Date getCreateTime(){
+    public Date getCreateTime() {
         return this.createTime;
     }
-    public void setCreateTime(Date createTime){
+
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
- 	@Override
+
+    public Integer getIsDis() {
+        return this.isDis;
+    }
+
+    public void setIsDis(Integer isDis) {
+        this.isDis = isDis;
+    }
+
+    @Override
     public String toString() {
-    String toString = "Department ["+
-    					"id = "+id+","+
-						"dept_code = "+deptCode+","+
-						"deptname = "+deptname+","+
-						"deptinfo = "+deptinfo+","+
-						"create_time = "+createTime+","+
-						"]";
+        String toString = "Department [" + "id = " + id + "," + "dept_code = " + deptCode + "," + "deptname = "
+                + deptname + "," + "deptinfo = " + deptinfo + "," + "create_time = " + createTime + "," + "is_dis = "
+                + isDis + "," + "]";
         return toString;
-	}
+    }
 
 }

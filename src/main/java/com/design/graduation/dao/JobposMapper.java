@@ -51,12 +51,17 @@ public interface JobposMapper {
      */
     int selectCount(Jobpos jobpos);
 
+    int selectRelationCount(Jobpos jobpos);
+
     /**
      * 根据条件查询Jobpos数据
      * @param jobpos
      */
     List<Jobpos> selectData(@Param("jobpos") Jobpos jobpos, @Param("limit") int limit, @Param("offset") int offset,
             @Param("order_by") String order_by);
+
+    List<Map<String, Object>> selectRelationData(@Param("jobpos") Jobpos jobpos, @Param("limit") int limit,
+            @Param("offset") int offset, @Param("order_by") String order_by);
 
     /**
      * 根据条件查询Jobpos数据不分页
@@ -65,4 +70,5 @@ public interface JobposMapper {
     List<Jobpos> selectByParam(@Param("jobpos") Jobpos jobpos, @Param("order_by") String order_by);
 
     List<Map<Integer, String>> ajaxSelectJobposByDeptId(@Param("deptId") String deptId);
+
 }

@@ -32,7 +32,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             </a>
         </div>
         <div class="header-right right">
-            <button>
+            <button onclick="jumpIframe('rest/welcome')">
                 <span class="glyphicon glyphicon-home"></span>
             </button>
             <button onclick="location.href='<%=path %>/rest/logoutAction'">
@@ -47,24 +47,34 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <ul class="nav nav-pills nav-stacked">
             <li role="presentation">
                 <a href="#ssztgl-menu" class="nav-header" data-toggle="collapse"><span class="glyphicon glyphicon-folder-open"></span><span>人事信息管理</span></a>
-                <ul id="ssztgl-menu" class="nav nav-list collapse">
-                    <li><a onclick="jumpIframe('employee/show')"><span class="glyphicon glyphicon-menu-right"></span><span>用户信息管理</span></a></li>
-                    <li><a onclick="jumpIframe('leading_enterprise/show')"><span class="glyphicon glyphicon-menu-right"></span><span>部门信息管理</span></a></li>
-                	<li><a onclick="jumpIframe('other_enterprise/show')"><span class="glyphicon glyphicon-menu-right"></span><span>合同信息管理</span></a></li>
-                	<li><a onclick="jumpIframe('other_enterprise/show')"><span class="glyphicon glyphicon-menu-right"></span><span>考勤信息管理</span></a></li>
+                <ul id="ssztgl-menu" class="nav nav-list collapse in">
+                    <li><a onclick="jumpIframe('department/show')"><span class="glyphicon glyphicon-menu-right"></span><span>部门信息管理</span></a></li>
+                    <li><a onclick="jumpIframe('jobpos/show')"><span class="glyphicon glyphicon-menu-right"></span><span>职位信息管理</span></a></li>
+                	<li><a onclick="jumpIframe('employee/show')"><span class="glyphicon glyphicon-menu-right"></span><span>用户信息管理</span></a></li>
+                    <li><a onclick="jumpIframe('contract/show')"><span class="glyphicon glyphicon-menu-right"></span><span>合同信息管理</span></a></li>
                 </ul>
             </li>
-            <li role="presentation">
-				<a class="nav-header" onclick="jumpIframe('poverty/show')" target = "plc-iframe"><span class="glyphicon glyphicon-menu-hamburger"></span>工作管理</a>
-			</li>
 			<li role="presentation">
-				<a class="nav-header" onclick="jumpIframe('xzqh/show')" target = "plc-iframe"><span class="glyphicon glyphicon-menu-hamburger"></span>通讯管理</a>
+				<a href="#dsjfx-menu" class="nav-header" data-toggle="collapse"><span class="glyphicon glyphicon-menu-hamburger"></span>工作管理</a>
+                <ul id="dsjfx-menu" class="nav nav-list collapse in">
+	                <li><a href="#hzsml-menu" class="nav-header" data-toggle="collapse"><span class="glyphicon glyphicon-triangle-right"></span><span>考勤管理</span></a></li>
+	                <ul id="hzsml-menu" class="nav nav-list collapse in">
+	                	<li><a onclick="jumpIframe('attendance/show')"><span class="glyphicon glyphicon-menu-right"></span><span>考勤数据</span></a></li>
+	                	<li><a onclick="jumpIframe('attd_approve_info/show')"><span class="glyphicon glyphicon-menu-right"></span><span>考勤审批</span></a></li>
+	                </ul>
+                    <li><a onclick="jumpIframe('jobs_manage/show')"><span class="glyphicon glyphicon-menu-right"></span><span>任务管理</span></a></li>
+                </ul>
 			</li>
+			
+			<li role="presentation">
+				<a class="nav-header" onclick="jumpIframe('emp_friend/show')" target = "plc-iframe"><span class="glyphicon glyphicon-folder-open"></span>通讯管理</a>
+			</li>
+			
         </ul>
     </div>
     <div class="side-right" style="overflow:hidden;">
-        <%-- <Iframe src="<%=path %>/rest/welcome" width="100%" height="99.5%" frameborder="0" id="plc-iframe" onload="iframeonload()"></Iframe> --%>
-        <Iframe src="<%=path %>/employee/add" width="100%" height="99.5%" frameborder="0" id="plc-iframe" onload="iframeonload()"></Iframe>
+        <Iframe src="<%=path %>/rest/welcome" width="100%" height="99.5%" frameborder="0" id="plc-iframe" onload="iframeonload()"></Iframe>
+        <%-- <Iframe src="<%=path %>/attendance/show" width="100%" height="99.5%" frameborder="0" id="plc-iframe" onload="iframeonload()"></Iframe> --%>
     </div>
 
 </div>

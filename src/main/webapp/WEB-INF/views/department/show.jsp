@@ -1,5 +1,4 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -38,11 +37,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <!--头部内容-->
     <div class="header">
         <ol class="breadcrumb">
-            <li><a>首页</a></li>
+            <li>人事信息管理</li>
             <li>></li>
-            <li>****管理</li>
-            <li>></li>
-            <li class="active">***管理</li>
+            <li class="active">部门信息管理</li>
         </ol>
     </div>
     <!--过滤条件-->
@@ -52,30 +49,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             <span>过滤条件</span>
         </div>
         <div class="panel-body pad-tb-25">
-            <div class="row">
-                
-                <div class="col-xs-2">
-                    <button class="chaxun-bottom" id="department_search">查询</button>
-                </div>
-            </div>
+            <span>部门名称：</span>
+	        <input type="text" placeholder="请输入部门名称" id="searchSelectDeptname">
+	        <button class="chaxun-bottom" id="department_chaxun">查询</button>
         </div>
         
         <div class="panel panel-default">
         	<div class="panel-heading">
             <span class="iconstate left bg-filter"></span>
-            <span class="left bg-filter">***数据表</span>
-			<shiro:hasPermission name="department_insert">
+            <span class="left bg-filter">部门信息</span>
             <button class="tianjia-button right bg-filter" id="department_plus"><span class="glyphicon glyphicon-plus"></span> 添加</button>
-			</shiro:hasPermission>
-			<shiro:hasPermission name="department_update">
 			<button class="tianjia-button right bg-filter" id="department_edit"><span class="glyphicon glyphicon-edit"></span> 修改</button>
-			</shiro:hasPermission>
-			<shiro:hasPermission name="department_delete">
 			<button class="tianjia-button right bg-filter" id="department_remove"><span class="glyphicon glyphicon-remove"></span> 删除</button>
-			</shiro:hasPermission>
-			<shiro:hasPermission name="department_export">
-			<button class="tianjia-button right bg-filter" id="department_file"><span class="glyphicon glyphicon-file"></span> 导出</button>
-			</shiro:hasPermission>
         	</div>
         </div>
         <div class="panel-body">
@@ -93,12 +78,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	departmentParam.deptname;
 	departmentParam.deptinfo;
 	departmentParam.createTime;
+	departmentParam.isDis;
 
 	$(function(){
 		var GridParam = JSON.parse(JSON.stringify(departmentParam));
 		$("#GRIDTABLE").jqGrid({
             //caption:'权限管理',
-            url: '<%=path %>/department/select', //若修改url地址，可将此url对应的本地json文件删除
+            url: '<%=path %>/department/select',
             styleUI: 'Bootstrap',//设置jqgrid的全局样式为bootstrap样式
             datatype: "json", //数据类型
             mtype: "post",//提交方式
@@ -112,21 +98,25 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             altRows: true,//设置为交替行表格,默认为false
             //rownumbers : true,//是否显示行号
             //rownumWidth : '80px', //设置行号的宽度
-            //multiselect: true,//定义多选选择框
-            //multiboxonly : true,//单选框
+            multiselect: true,//定义多选选择框
+            multiboxonly : true,//单选框
             colNames: [
 				"",
 			"部门编码",
 			"部门名称",
 			"部门信息",
-			"创建时间"
+			"创建时间",
+			"是否能直接分配所属工作"
 			],
             colModel: [
 				{name: "id", index: "id", sortable: false, width: 60, align: "center", hidden:true},
 			{name: "deptCode", index: "deptCode", sortable: false, width: 60, align: "center"},
 			{name: "deptname", index: "deptname", sortable: false, width: 60, align: "center"},
 			{name: "deptinfo", index: "deptinfo", sortable: false, width: 60, align: "center"},
-			{name: "createTime", index: "createTime", sortable: false, width: 60, align: "center"}
+			{name: "createTime", index: "createTime", sortable: false, width: 60, align: "center"},
+			{name: "isDis", index: "isDis", sortable: false, width: 60, align: "center",formatter:function(value,options,rowData){
+				return value == 1? "分配":"无法分配";
+			}}
             ],
             rowNum:15, 
     		rowList:[15,30,50], 
@@ -146,8 +136,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	var searchGridParam = JSON.stringify(departmentParam);
 	
     //查询
-	$("#department_search").click(function(){
+	$("#department_chaxun").click(function(){
 		var param = JSON.parse(searchGridParam);
+		
+		param.deptname= $("#searchSelectDeptname").val();
 		
 		//为param 赋值
 		var GridParam = JSON.stringify(param);
@@ -194,7 +186,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			return;
 		} else {
 			if (confirm("确认删除当前选中数据吗？")) {
-				$.ajax({url:'<%=path %>/department/deleteBatchRelation',
+				$.ajax({url:'<%=path %>/department/deleteBatch',
 		       		type:'post',
 		       		cache:false,
 		       		dataType:'json',

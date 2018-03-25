@@ -1,5 +1,4 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -23,6 +22,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <script type="text/javascript" src="<%=path %>/assets/js/jquery/jquery.jqGrid.min.js"></script>
     <script type="text/javascript" src="<%=path %>/assets/js/bootstrap/bootstrap.min.js"></script>
 
+    <script src="<%=path %>/assets/js/user_common.js"></script>
+    
 	<style type="text/css">
 		span.glyphicon{
 			height:30px;
@@ -38,11 +39,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <!--头部内容-->
     <div class="header">
         <ol class="breadcrumb">
-            <li><a>首页</a></li>
+            <li>人事信息管理</li>
             <li>></li>
-            <li>****管理</li>
-            <li>></li>
-            <li class="active">***管理</li>
+            <li class="active">职位信息管理</li>
         </ol>
     </div>
     <!--过滤条件-->
@@ -52,30 +51,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             <span>过滤条件</span>
         </div>
         <div class="panel-body pad-tb-25">
-            <div class="row">
-                
-                <div class="col-xs-2">
-                    <button class="chaxun-bottom" id="jobpos_search">查询</button>
-                </div>
-            </div>
+            <span>职位名称：</span>
+	        <input type="text" placeholder="请输入职位名称" id="searchSelectJobposName">
+	        <button class="chaxun-bottom" id="jobpos_chaxun">查询</button>
         </div>
         
         <div class="panel panel-default">
         	<div class="panel-heading">
             <span class="iconstate left bg-filter"></span>
-            <span class="left bg-filter">***数据表</span>
-			<shiro:hasPermission name="jobpos_insert">
+            <span class="left bg-filter">职位信息</span>
             <button class="tianjia-button right bg-filter" id="jobpos_plus"><span class="glyphicon glyphicon-plus"></span> 添加</button>
-			</shiro:hasPermission>
-			<shiro:hasPermission name="jobpos_update">
 			<button class="tianjia-button right bg-filter" id="jobpos_edit"><span class="glyphicon glyphicon-edit"></span> 修改</button>
-			</shiro:hasPermission>
-			<shiro:hasPermission name="jobpos_delete">
 			<button class="tianjia-button right bg-filter" id="jobpos_remove"><span class="glyphicon glyphicon-remove"></span> 删除</button>
-			</shiro:hasPermission>
-			<shiro:hasPermission name="jobpos_export">
-			<button class="tianjia-button right bg-filter" id="jobpos_file"><span class="glyphicon glyphicon-file"></span> 导出</button>
-			</shiro:hasPermission>
         	</div>
         </div>
         <div class="panel-body">
@@ -99,7 +86,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		var GridParam = JSON.parse(JSON.stringify(jobposParam));
 		$("#GRIDTABLE").jqGrid({
             //caption:'权限管理',
-            url: '<%=path %>/jobpos/select', //若修改url地址，可将此url对应的本地json文件删除
+            url: '<%=path %>/jobpos/selectRelationData',
             styleUI: 'Bootstrap',//设置jqgrid的全局样式为bootstrap样式
             datatype: "json", //数据类型
             mtype: "post",//提交方式
@@ -113,8 +100,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             altRows: true,//设置为交替行表格,默认为false
             //rownumbers : true,//是否显示行号
             //rownumWidth : '80px', //设置行号的宽度
-            //multiselect: true,//定义多选选择框
-            //multiboxonly : true,//单选框
+            multiselect: true,//定义多选选择框
+            multiboxonly : true,//单选框
             colNames: [
 				"",
 			"职位名称",
@@ -125,11 +112,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			],
             colModel: [
 				{name: "id", index: "id", sortable: false, width: 60, align: "center", hidden:true},
-			{name: "jobposName", index: "jobposName", sortable: false, width: 60, align: "center"},
-			{name: "jobposCode", index: "jobposCode", sortable: false, width: 60, align: "center"},
-			{name: "jobposLevel", index: "jobposLevel", sortable: false, width: 60, align: "center"},
-			{name: "deptId", index: "deptId", sortable: false, width: 60, align: "center"},
-			{name: "createTime", index: "createTime", sortable: false, width: 60, align: "center"}
+			{name: "jobpos_name", index: "jobpos_name", sortable: false, width: 60, align: "center"},
+			{name: "jobpos_code", index: "jobpos_code", sortable: false, width: 60, align: "center"},
+			{name: "jobpos_level", index: "jobpos_level", sortable: false, width: 60, align: "center"},
+			{name: "deptname", index: "deptname", sortable: false, width: 60, align: "center"},
+			{name: "create_time", index: "create_time", sortable: false, width: 60, align: "center",formatter:function(value,options,rowData){
+				return getFormatDate(value);
+			}}
             ],
             rowNum:15, 
     		rowList:[15,30,50], 
@@ -149,8 +138,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	var searchGridParam = JSON.stringify(jobposParam);
 	
     //查询
-	$("#jobpos_search").click(function(){
+	$("#jobpos_chaxun").click(function(){
 		var param = JSON.parse(searchGridParam);
+		
+		param.jobposName= $("#searchSelectJobposName").val();
 		
 		//为param 赋值
 		var GridParam = JSON.stringify(param);
@@ -159,7 +150,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 	function searchFun(GridParam){
 		$("#GRIDTABLE").jqGrid("setGridParam",{
-			url:"<%=path %>/jobpos/select",
+			url:"<%=path %>/jobpos/selectRelationData",
 			postData:{GridParam:GridParam},
 			page:1
 		}).trigger("reloadGrid");
@@ -197,7 +188,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			return;
 		} else {
 			if (confirm("确认删除当前选中数据吗？")) {
-				$.ajax({url:'<%=path %>/jobpos/deleteBatchRelation',
+				$.ajax({url:'<%=path %>/jobpos/deleteBatch',
 		       		type:'post',
 		       		cache:false,
 		       		dataType:'json',
