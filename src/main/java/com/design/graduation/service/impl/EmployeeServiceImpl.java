@@ -179,6 +179,25 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public ReturnData selectEmpIds() {
+        ReturnData rd = new ReturnData();
+        try {
+            List<Integer> data = employeeMapper.selectEmpIds();
+            Map<String, Object> dataMap = new HashMap<String, Object>();
+            dataMap.put("data", data);
+            rd.setCode("OK");
+            rd.setData(dataMap);
+        }
+        catch (Exception e) {
+            logger.error(e.getMessage());
+            //执行插入操作异常,返回错误信息
+            rd.setCode("ERROR");
+            rd.setMsg(e.getMessage());
+        }
+        return rd;
+    }
+
+    @Override
     public ReturnData ajaxSelectMaxEmpCode() {
         ReturnData rd = new ReturnData();
         try {

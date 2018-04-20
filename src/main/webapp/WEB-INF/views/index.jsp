@@ -57,11 +57,24 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<li role="presentation">
 				<a href="#dsjfx-menu" class="nav-header" data-toggle="collapse"><span class="glyphicon glyphicon-menu-hamburger"></span>工作管理</a>
                 <ul id="dsjfx-menu" class="nav nav-list collapse in">
+	                
+	                <!-- <li><a href="#hzsml-menu" class="nav-header" data-toggle="collapse"><span class="glyphicon glyphicon-triangle-right"></span><span>业务流程部署</span></a></li>
+	                <ul id="hzsml-menu" class="nav nav-list collapse in">
+	                	<li><a onclick="jumpIframe('activiti_flow/activiti_flow_show')"><span class="glyphicon glyphicon-menu-right"></span><span>请假审批流程</span></a></li>
+	                	<li><a onclick="jumpIframe('')"><span class="glyphicon glyphicon-menu-right"></span><span>调休审批流程</span></a></li>
+	                	<li><a onclick="jumpIframe('')"><span class="glyphicon glyphicon-menu-right"></span><span>出差审批流程</span></a></li>
+	                	<li><a onclick="jumpIframe('')"><span class="glyphicon glyphicon-menu-right"></span><span>工作审批流程</span></a></li>
+	                </ul> -->
+	                
+                    <li><a onclick="jumpIframe('activiti_flow/show')"><span class="glyphicon glyphicon-menu-right"></span><span>业务流程部署</span></a></li>
+                    
 	                <li><a href="#hzsml-menu" class="nav-header" data-toggle="collapse"><span class="glyphicon glyphicon-triangle-right"></span><span>考勤管理</span></a></li>
 	                <ul id="hzsml-menu" class="nav nav-list collapse in">
 	                	<li><a onclick="jumpIframe('attendance/show')"><span class="glyphicon glyphicon-menu-right"></span><span>考勤数据</span></a></li>
-	                	<li><a onclick="jumpIframe('attd_approve_info/show')"><span class="glyphicon glyphicon-menu-right"></span><span>考勤审批</span></a></li>
+	                	<li><a onclick="jumpIframe('attd_approve_info/show')"><span class="glyphicon glyphicon-menu-right"></span><span>考勤审批提交</span></a></li>
+	                	<li><a onclick="jumpIframe('activiti_flow/showTask')"><span class="glyphicon glyphicon-menu-right"></span><span>审批任务管理</span></a></li>
 	                </ul>
+	                
                     <li><a onclick="jumpIframe('jobs_manage/show')"><span class="glyphicon glyphicon-menu-right"></span><span>任务管理</span></a></li>
                 </ul>
 			</li>
@@ -73,8 +86,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         </ul>
     </div>
     <div class="side-right" style="overflow:hidden;">
-        <Iframe src="<%=path %>/rest/welcome" width="100%" height="99.5%" frameborder="0" id="plc-iframe" onload="iframeonload()"></Iframe>
-        <%-- <Iframe src="<%=path %>/attendance/show" width="100%" height="99.5%" frameborder="0" id="plc-iframe" onload="iframeonload()"></Iframe> --%>
+        <%-- <Iframe src="<%=path %>/rest/welcome" width="100%" height="99.5%" frameborder="0" id="plc-iframe" onload="iframeonload()"></Iframe> --%>
+        <Iframe src="<%=path %>/attd_approve_info/show" width="100%" height="99.5%" frameborder="0" id="plc-iframe" onload="iframeonload()"></Iframe>
     </div>
 
 </div>

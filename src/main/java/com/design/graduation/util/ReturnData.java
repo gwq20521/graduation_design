@@ -7,6 +7,15 @@ package com.design.graduation.util;
 
 import java.util.Map;
 
+/**
+ * @className: com.design.graduation.util.ReturnData
+ * @description: TODO - 
+ * @author: 郭伟强   E-mail:gwq20521@163.com
+ * @createTime: 2018年3月31日 上午11:50:12 
+ * @version: v 1.0
+ * @since 
+ *
+ */
 public class ReturnData {
     private String code;
 

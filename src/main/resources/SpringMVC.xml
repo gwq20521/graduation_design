@@ -73,4 +73,8 @@
     	<bean class="com.design.graduation.util.ApplicationInterceptor"/>  
     </mvc:interceptors>
     
+    <!-- 新增全局监听设置类 -->
+    <bean class= "com.design.graduation.util.ApplicationInit"></bean>
+    <bean class= "com.design.graduation.util.ApplicationEnd"></bean>
+    
 </beans>

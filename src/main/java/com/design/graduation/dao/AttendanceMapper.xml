@@ -5,7 +5,7 @@
 	    	<result column="id" property="id" jdbcType="INTEGER" />
 	    	<result column="emp_id" property="empId" jdbcType="INTEGER" />
 	    	<result column="attd_state" property="attdState" jdbcType="INTEGER" />
-	    	<result column="create_time" property="createTime" jdbcType="DATE" />
+	    	<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 		</resultMap>
 	<sql id="Base_Column_List" >
 			emp_id,
@@ -21,6 +21,16 @@
         	#{empId,jdbcType=INTEGER},
         	#{attdState,jdbcType=INTEGER},
 			NOW()
+        )
+    </insert>
+	
+	<insert id="insertByTime" parameterType="com.design.graduation.model.Attendance">
+        insert into attendance (
+			<include refid="Base_Column_List" />
+		)values(
+        	#{empId,jdbcType=INTEGER},
+        	#{attdState,jdbcType=INTEGER},
+			#{createTime,jdbcType=TIMESTAMP}
         )
     </insert>
     
@@ -39,7 +49,7 @@
                 attd_state = #{attdState,jdbcType=INTEGER} and
             </if>
 			<if test="createTime != null and createTime != ''">
-                create_time = #{createTime,jdbcType=DATE} and
+                create_time = #{createTime,jdbcType=TIMESTAMP} and
             </if>
             </trim>
             </where>
@@ -62,6 +72,9 @@
 			<if test="attdState != null and attdState != ''">
                 attd_state = #{attdState,jdbcType=INTEGER},
             </if>
+			<if test="createTime != null"><!-- and createTime != '' -->
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
     	</set>
     	where id = #{id,jdbcType=INTEGER}
     </update>
@@ -81,7 +94,7 @@
                 attd_state = #{attdState,jdbcType=INTEGER} and
             </if>
 			<if test="createTime != null and createTime != ''">
-                create_time = #{createTime,jdbcType=DATE} and
+                create_time = #{createTime,jdbcType=TIMESTAMP} and
             </if>
             </trim>
             </where>
@@ -105,7 +118,7 @@
                 attd_state = #{attendance.attdState,jdbcType=INTEGER} and
             </if>
 			<if test="attendance.createTime != null and attendance.createTime != ''">
-                create_time = #{attendance.createTime,jdbcType=DATE} and
+                create_time = #{attendance.createTime,jdbcType=TIMESTAMP} and
             </if>
             </trim>
             </where>
@@ -128,7 +141,7 @@
                 attd_state = #{attdState,jdbcType=INTEGER} and
             </if>
 			<if test="createTime != null and createTime != ''">
-                create_time = #{createTime,jdbcType=DATE} and
+                create_time = #{createTime,jdbcType=TIMESTAMP} and
             </if>
             </trim>
             </where>
@@ -151,7 +164,7 @@
                 xtx.attd_state = #{attendance.attdState,jdbcType=INTEGER} and
             </if>
 			<if test="attendance.createTime != null and attendance.createTime != ''">
-                xtx.create_time = #{attendance.createTime,jdbcType=DATE} and
+                xtx.create_time = #{attendance.createTime,jdbcType=TIMESTAMP} and
             </if>
             xtx.emp_id = e.id and 
             </trim>
@@ -178,8 +191,14 @@
                 xtx.attd_state = #{attendance.attdState,jdbcType=INTEGER} and
             </if>
 			<if test="attendance.createTime != null and attendance.createTime != ''">
-                xtx.create_time = #{attendance.createTime,jdbcType=DATE} and
+                xtx.create_time = #{attendance.createTime,jdbcType=TIMESTAMP} and
             </if>
+            
+			<if test="createTimeStr != null and createTimeStr != ''">
+                xtx.create_time &gt;= '${createTimeStr} 00:00:00' and
+                xtx.create_time &lt;= '${createTimeStr} 23:59:59' and
+            </if>
+			
             xtx.emp_id = e.id and 
 			<if test="empRealname != null and empRealname != ''">
                 e.realname LIKE CONCAT(CONCAT('%', #{empRealname,jdbcType=VARCHAR}), '%') and
@@ -206,8 +225,14 @@
                 xtx.attd_state = #{attendance.attdState,jdbcType=INTEGER} and
             </if>
 			<if test="attendance.createTime != null and attendance.createTime != ''">
-                xtx.create_time = #{attendance.createTime,jdbcType=DATE} and
+                xtx.create_time = #{attendance.createTime,jdbcType=TIMESTAMP} and
             </if>
+            
+			<if test="createTimeStr != null and createTimeStr != ''">
+                xtx.create_time &gt;= '${createTimeStr} 00:00:00' and
+                xtx.create_time &lt;= '${createTimeStr} 23:59:59' and
+            </if>
+			
             xtx.emp_id = e.id and 
 			<if test="empRealname != null and empRealname != ''">
                 e.realname LIKE CONCAT(CONCAT('%', #{empRealname,jdbcType=VARCHAR}), '%') and
@@ -235,11 +260,59 @@
                 attd_state = #{attendance.attdState,jdbcType=INTEGER} and
             </if>
 			<if test="attendance.createTime != null and attendance.createTime != ''">
-                create_time = #{attendance.createTime,jdbcType=DATE} and
+                create_time = #{attendance.createTime,jdbcType=TIMESTAMP} and
             </if>
             </trim>
             </where>
         </if>
         order by ${order_by} desc
     </select>
+	
+	<select id="selectByNowDateStr" resultMap="BaseResultMap" parameterType="com.design.graduation.model.Attendance">
+    	select id,
+			<include refid="Base_Column_List" />
+		from attendance 
+		<if test="_parameter != null">
+            <where>
+            <trim suffixOverrides="and">
+			<if test="attendance.id != null and attendance.id != ''">
+                id = #{attendance.id,jdbcType=INTEGER} and
+            </if>
+			<if test="attendance.empId != null and attendance.empId != ''">
+                emp_id = #{attendance.empId,jdbcType=INTEGER} and
+            </if>
+			<if test="attendance.attdState != null and attendance.attdState != ''">
+                attd_state = #{attendance.attdState,jdbcType=INTEGER} and
+            </if>
+			<if test="attendance.createTime != null and attendance.createTime != ''">
+                create_time = #{attendance.createTime,jdbcType=TIMESTAMP} and
+            </if>
+            
+			<if test="nowDateStr != null and nowDateStr != ''">
+                create_time &gt; '${nowDateStr} 00:00:00' and
+            </if>
+            
+            </trim>
+            </where>
+        </if>
+    </select>
+    
+    <select id="selectEmpIdsByCreateTime" resultType="java.lang.Integer">
+    	SELECT emp_id
+		FROM attendance
+		<if test="_parameter != null">
+            <where>
+            <trim suffixOverrides="and">
+				<if test="createTime != null and createTime != ''">
+	                create_time &gt;= '${createTime} 00:00:00' and
+	                create_time &lt;= '${createTime} 23:59:59' and
+	            </if>
+            </trim>
+            </where>
+        </if>
+        ORDER BY emp_id ASC
+    </select>
+    
+    
+	
 </mapper>

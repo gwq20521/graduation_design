@@ -82,4 +82,6 @@ public interface EmployeeMapper {
 
     String selectRealnameById(@Param("id") Integer id);
 
+    List<Integer> selectEmpIds();
+
 }

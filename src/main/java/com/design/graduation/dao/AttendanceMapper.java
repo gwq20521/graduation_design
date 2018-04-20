@@ -27,6 +27,8 @@ public interface AttendanceMapper {
      */
     void insert(Attendance attendance);
 
+    void insertByTime(Attendance attendance);
+
     /**
      * attendance 执行删除 数据操作
      * @param attendance
@@ -72,16 +74,21 @@ public interface AttendanceMapper {
             @Param("offset") int offset, @Param("order_by") String order_by);
 
     int selectRelationCountByEmpRealname(@Param("attendance") Attendance attendance,
-            @Param("empRealname") String empRealname);
+            @Param("empRealname") String empRealname, @Param("createTimeStr") String createTimeStr);
 
     List<Map<String, Object>> selectRelationDataByEmpRealname(@Param("attendance") Attendance attendance,
             @Param("limit") int limit, @Param("offset") int offset, @Param("order_by") String order_by,
-            @Param("empRealname") String empRealname);
+            @Param("empRealname") String empRealname, @Param("createTimeStr") String createTimeStr);
 
     /**
      * 根据条件查询Attendance数据不分页
      * @param attendance
      */
     List<Attendance> selectByParam(@Param("attendance") Attendance attendance, @Param("order_by") String order_by);
+
+    List<Attendance> selectByNowDateStr(@Param("attendance") Attendance attendance,
+            @Param("nowDateStr") String nowDateStr);
+
+    List<Integer> selectEmpIdsByCreateTime(@Param("createTime") String createTime);
 
 }

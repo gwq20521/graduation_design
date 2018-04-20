@@ -44,13 +44,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<!--头部内容-->
     <div class="header">
         <ol class="breadcrumb">
-            <li><a>首页</a></li>
+            <li>人事信息管理</li>
             <li>></li>
-            <li><a>***</a></li>
-            <li>></li>
-            <li><a>***</a></li>
-            <li>></li>
-            <li class="active">**修改</li>
+            <li class="active">合同信息修改</li>
         </ol>
     </div>
     <!--提示必填项部分-->

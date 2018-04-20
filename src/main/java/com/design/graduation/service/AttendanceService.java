@@ -69,5 +69,11 @@ public interface AttendanceService {
     ReturnData selectByParam(String order_by, Attendance attendance);
 
     JqGridJsonBean selectRelationDataByEmpRealname(String page, String rows, String order_by, Attendance attendance,
-            String empRealname);
+            String empRealname, String createTimeStr);
+
+    ReturnData selectByNowDateStr(Attendance attendance, String nowDateStr);
+
+    ReturnData insertByTime(Attendance attendance);
+
+    ReturnData selectEmpIdsByCreateTime(String createTime);
 }

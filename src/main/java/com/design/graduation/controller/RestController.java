@@ -12,10 +12,12 @@ import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.design.graduation.util.ReturnData;
@@ -137,4 +139,15 @@ public class RestController {
         subject.logout();
         return "rest/login";
     }
+
+    /**
+     * 数据测试页面
+     * @return
+     */
+    @RequiresPermissions(value = "test")
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public String show(Model model, HttpServletRequest request) {
+        return "test/admin";
+    }
+
 }

@@ -295,4 +295,8 @@
 		select realname from employee WHERE id=${id};
 	</select>
 	
+	<select id="selectEmpIds" resultType="java.lang.Integer">
+		select id from employee
+	</select>
+	
 </mapper>

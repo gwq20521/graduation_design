@@ -106,9 +106,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<div class="col-xs-6 row ie-col-6">
                     <span class="col-xs-3 glyphicon">* 合同上传：
                     </span>
-                    <form name="Form2" action="/SpringMVC006/springUpload" method="post"  enctype="multipart/form-data">
+                    <!-- <form name="Form2" action="/SpringMVC006/springUpload" method="post"  enctype="multipart/form-data">
+						
+					</form> -->
+                    <div class="col-xs-9 pad-0 row">
 						<input type="file" name="contractFileName" id="f_upload" class="file" />
-					</form>
+                    </div>
                 </div>
                 
                 

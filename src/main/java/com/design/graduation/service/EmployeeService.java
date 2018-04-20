@@ -69,4 +69,6 @@ public interface EmployeeService {
 
     String selectRealnameById(Integer id);
 
+    ReturnData selectEmpIds();
+
 }
