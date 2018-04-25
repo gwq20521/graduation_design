@@ -42,9 +42,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <ol class="breadcrumb">
             <li><a>首页</a></li>
             <li>></li>
-            <li>****管理</li>
+            <li>工作管理</li>
             <li>></li>
-            <li class="active">***管理</li>
+            <li class="active">任务管理</li>
+            
+	        <button class="chaxun-bottom" id="jobs_manage_PublishTask">发布任务</button>
+	        
         </ol>
     </div>
     <!--过滤条件-->
@@ -54,27 +57,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             <span>过滤条件</span>
         </div>
         <div class="panel-body pad-tb-25">
-            <span>***：</span>
-	        <input type="text" placeholder="请输入***" id="searchSelect">
+            <span>员工名称：</span>
+	        <input type="text" placeholder="请输入员工名称" id="searchSelectRealname">
 	        <button class="chaxun-bottom" id="jobs_manage_chaxun">查询</button>
         </div>
         
         <div class="panel panel-default">
         	<div class="panel-heading">
             <span class="iconstate left bg-filter"></span>
-            <span class="left bg-filter">***数据表</span>
-			<shiro:hasPermission name="jobs_manage_insert">
-            <button class="tianjia-button right bg-filter" id="jobs_manage_plus"><span class="glyphicon glyphicon-plus"></span> 添加</button>
-			</shiro:hasPermission>
-			<shiro:hasPermission name="jobs_manage_update">
-			<button class="tianjia-button right bg-filter" id="jobs_manage_edit"><span class="glyphicon glyphicon-edit"></span> 修改</button>
-			</shiro:hasPermission>
-			<shiro:hasPermission name="jobs_manage_delete">
-			<button class="tianjia-button right bg-filter" id="jobs_manage_remove"><span class="glyphicon glyphicon-remove"></span> 删除</button>
-			</shiro:hasPermission>
-			<shiro:hasPermission name="jobs_manage_export">
-			<button class="tianjia-button right bg-filter" id="jobs_manage_file"><span class="glyphicon glyphicon-file"></span> 导出</button>
-			</shiro:hasPermission>
+            <span class="left bg-filter">任务分配表</span>
         	</div>
         </div>
         <div class="panel-body">
@@ -100,7 +91,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		var GridParam = JSON.parse(JSON.stringify(jobs_manageParam));
 		$("#GRIDTABLE").jqGrid({
             //caption:'权限管理',
-            url: '<%=path %>/jobs_manage/select',
+            url: '<%=path %>/jobs_manage/selectRelationData',
             styleUI: 'Bootstrap',//设置jqgrid的全局样式为bootstrap样式
             datatype: "json", //数据类型
             mtype: "post",//提交方式
@@ -117,24 +108,58 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             //multiselect: true,//定义多选选择框
             //multiboxonly : true,//单选框
             colNames: [
-				"",
-			"创建领导",
-			"指定分配员工",
+				/* "", */
+			/* "创建领导", */
+			"",
+			"指定员工",
 			"工作描述",
-			"工作状态 0-新建 1-进行中 2-已解决 3-已关闭 4-已驳回",
-			"创建时间",
+			"工作状态",
+			/* "创建时间", */
 			"修改时间",
-			"工作具体小结"
+			/* "工作小结", */
+			"操作"
 			],
             colModel: [
-				{name: "id", index: "id", sortable: false, width: 60, align: "center", hidden:true},
-			{name: "createUserId", index: "createUserId", sortable: false, width: 60, align: "center"},
-			{name: "workUserId", index: "workUserId", sortable: false, width: 60, align: "center"},
-			{name: "jobInfo", index: "jobInfo", sortable: false, width: 60, align: "center"},
-			{name: "jobState", index: "jobState", sortable: false, width: 60, align: "center"},
-			{name: "createTime", index: "createTime", sortable: false, width: 60, align: "center"},
-			{name: "updateTime", index: "updateTime", sortable: false, width: 60, align: "center"},
-			{name: "jobWorkInfo", index: "jobWorkInfo", sortable: false, width: 60, align: "center"}
+				/* {name: "id", index: "id", sortable: false, width: 60, align: "center", hidden:true}, */
+			/* {name: "realname1", index: "realname1", sortable: false, width: 60, align: "center"}, */
+			{name: "work_user_id", index: "work_user_id", sortable: false, width: 60, align: "center", hidden:true},
+			{name: "realname2", index: "realname2", sortable: false, width: 60, align: "center"},
+			{name: "job_info", index: "jobInfo", sortable: false, width: 60, align: "center"},
+			{name: "job_state", index: "job_state", sortable: false, width: 60, align: "center",formatter:function(value,options,rowData){
+				var jobStateStr = "";
+				switch(value){// 0-新建 1-进行中 2-已解决 3-已关闭 4-已驳回
+				    case 0:jobStateStr = "新建";break;  
+				    case 1:jobStateStr = "进行中";break;  
+				    case 2:jobStateStr = "已解决";break;  
+				    /* case 3:jobStateStr = "已关闭";break; */
+				    default:jobStateStr = "未知状态";break;
+				}
+				return jobStateStr;
+			}},
+			/* {name: "createTime", index: "createTime", sortable: false, width: 60, align: "center"}, */
+			{name: "update_time", index: "update_time", sortable: false, width: 60, align: "center",formatter:function(value,options,rowData){
+				return getFormatDate(value);
+			}},
+			/* {name: "job_work_info", index: "job_work_info", sortable: false, width: 60, align: "center"}, */
+			{name: "id", index: "id", sortable: false, width: 120, align: "center",formatter:function(value,options,rowData){
+				var jobState = rowData.job_state;
+				
+				var actHtml = "";
+				if (jobState == 0) {// 0-新建 1-进行中 2-已解决 3-已关闭 4-已驳回
+					actHtml += "<a href='#' onclick='javascript:delJobsManage("+value+");return false;'>删除</a>";
+					actHtml += "&nbsp;&nbsp;&nbsp;";
+					actHtml += "<a href='#' onclick='javascript:updateJobsManage("+value+");return false;'>修改</a>";
+					actHtml += "&nbsp;&nbsp;&nbsp;";
+					actHtml += "<a href='#' onclick='javascript:commitJobsManage("+value+","+rowData.work_user_id+");return false;'>分配</a>";
+				} else if (jobState == 1) {
+					actHtml += "<a href='#' onclick='javascript:delJobsManage("+value+");return false;'>删除</a>";
+					/* actHtml += "&nbsp;&nbsp;&nbsp;";
+					actHtml += "<a href='#' onclick='javascript:viewJobsManageHisComment("+value+");return false;'>查看批注记录</a>"; */
+				} else if (jobState == 2) {
+					actHtml += "<a href='#' onclick='javascript:viewJobsManage("+value+");return false;'>查看工作小结</a>";
+				}
+				return actHtml;
+			}}
             ],
             rowNum:15, 
     		rowList:[15,30,50], 
@@ -150,7 +175,75 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         });
         $("#GRIDPAGE").css("height", "45px");
 	});
-	
+
+	function delJobsManage(jobsManageId, workUserId){
+		if (confirm("确认删除当前审批吗？")) {
+			$.ajax({url:'<%=path %>/jobs_manage/deleteById',
+	       		type:'post',
+	       		cache:false,
+	       		dataType:'json',
+	       		data:{id: jobsManageId},
+	           	success:function(data){
+	           		if(data.code == "OK"){
+	           			alert("数据删除成功");
+	           			window.location.href= "<%=path %>/jobs_manage/show";
+	           		} else {
+	           			alert(data.msg);
+	           		}
+	           	}, 
+	           	error : function() {
+	           		alert("异常！");
+	           	}
+	        });
+		}
+	}
+
+	function commitJobsManage(jobsManageId, workUserId){//
+		if (confirm("是否确认分配？")) {
+			$.ajax({url:'<%=path %>/activiti_flow/commitJobsManage',
+	       		type:'post',
+	       		data:{
+	       			jobsManageId:jobsManageId,
+	       			workUserId:workUserId
+	       		},
+	           	success:function(data){
+	           		if(data.code == "OK"){
+	           			alert("任务分配成功");
+	           			window.location.href= "<%=path %>/jobs_manage/show";
+	           		} else {
+	           			alert(data.msg);
+	           		}
+	           	}, 
+	           	error : function() {
+	           		alert("异常！");
+	           	}
+	        });
+		}
+	}
+
+	function viewJobsManage(jobsManageId){
+		$.ajax({url:'<%=path %>/jobs_manage/viewJobWorkInfo',
+       		type:'post',
+       		data:{
+       			jobsManageId:jobsManageId
+       		},
+           	success:function(data){
+           		if(data.code == "OK"){
+           			alert(data.data.data[0].jobWorkInfo);
+           		} else {
+           			alert(data.msg);
+           		}
+           	}, 
+           	error : function() {
+           		alert("异常！");
+           	}
+        });
+	}
+
+	function updateJobsManage(jobsManageId){
+		window.location.href= "<%=path %>/jobs_manage/edit?id="+jobsManageId;
+	}
+
 	var searchGridParam = JSON.stringify(jobs_manageParam);
 	
     //查询
@@ -159,89 +252,24 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		
 		//为param 赋值
 		var GridParam = JSON.stringify(param);
-		searchFun(GridParam);
+
+		var empRealname = $("#searchSelectRealname").val();
+		
+		searchFun(GridParam, empRealname);
 	});
 
-	function searchFun(GridParam){
+	function searchFun(GridParam, empRealname){
 		$("#GRIDTABLE").jqGrid("setGridParam",{
-			url:"<%=path %>/jobs_manage/select",
-			postData:{GridParam:GridParam},
+			url:"<%=path %>/jobs_manage/selectRelationDataByEmpRealname",
+			postData:{GridParam:GridParam,
+				empRealname:empRealname},
 			page:1
 		}).trigger("reloadGrid");
 	}
 
     //新增
-	$("#jobs_manage_plus").click(function(){
+	$("#jobs_manage_PublishTask").click(function(){
 		window.location.href= "<%=path %>/jobs_manage/add";
-	});
-    
-    //修改 - 判定只能修改一条数据
-	$("#jobs_manage_edit").click(function(){
-		var ids = $("#GRIDTABLE").jqGrid("getGridParam","selarrrow");
-		if(ids.length == 0){
-			alert("先选择一条数据");
-			return;
-		} else if(ids.length > 1){
-			alert("请您只选择一条需要修改的数据");
-			return;
-		} else {
-			if (confirm("确认修改当前选中数据的信息吗？")) {
-				//暂时不涉及经纬度的信息加载 - 暂不涉及相关网格码的修改
-				window.location.href= "<%=path %>/jobs_manage/edit?id="+ids;
-			}
-		}
-	});
-    
-    /*
-    删除 - 支持批量选中的删除 - 支持联动删除别的表中的数据
-    */
-    $("#jobs_manage_remove").click(function(){
-		var ids = $("#GRIDTABLE").jqGrid("getGridParam","selarrrow");
-		if(ids == ""){
-			alert("先选择一条数据");
-			return;
-		} else {
-			if (confirm("确认删除当前选中数据吗？")) {
-				$.ajax({url:'<%=path %>/jobs_manage/deleteBatch',
-		       		type:'post',
-		       		cache:false,
-		       		dataType:'json',
-		       		data:{
-		       			ids:ids+""
-		       		},
-		           	success:function(data){
-		           		if(data.code == "OK"){
-		           			alert("数据删除成功");
-		           			window.location.reload();
-		           		} else {
-		           			alert(data.msg);
-		           		}
-		           	}, 
-		           	error : function() {
-		           		alert("异常！");
-		           	}
-		        });
-			}
-		}
-	});
-    
-    //导入
-    $("#jobs_manage_import").click(function(){
-		alert("jobs_manage_import");
-	});
-    
-    //导出
-    $("#cjobs_manage_export").click(function(){
-    	var ids = $("#GRIDTABLE").jqGrid("getGridParam","selarrrow");
-		if(ids.length == 0){
-			if (confirm("确认导出当前表中的全部数据吗？")) {
-				window.location.href= "<%=path %>/jobs_manage/export?page=1&rows=5&json={}";
-			}
-		} else if(ids.length > 0){
-			if (confirm("确认导出当前选中数据吗？")) {
-				window.location.href= "<%=path %>/jobs_manage/export?page=1&rows=5&json={}";
-			}
-		}
 	});
     
     //表格自适应屏幕

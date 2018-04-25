@@ -162,7 +162,7 @@ public class AttdApproveListController {
             attdApproveInfo.setApproveState(2);//如果当前的任务是提交申请，则设置状态值为1 - 0-等待提交 1-开始审批 2-审批中 3-审批通过 4-审批驳回
             attdApproveInfoService.update(attdApproveInfo);
         }*/
-        else if ("审批【技术总监】".equals(name)) {
+        else if ("审批【技术总监/总经理】".equals(name)) {
             //获取到请假的天数
             ReturnData rdData = attdApproveInfoService.selectByParam(null, attdApproveInfo);
             List<AttdApproveInfo> dataList = (List<AttdApproveInfo>) rdData.getData().get("data");

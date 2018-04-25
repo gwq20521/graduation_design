@@ -299,4 +299,12 @@
 		select id from employee
 	</select>
 	
+	<select id="selectSubEmpListByJobId" resultMap="BaseResultMap">
+    	SELECT id,
+			<include refid="Base_Column_List" />
+		FROM employee 
+		WHERE jobpos_id IN (${jobposId})
+        order by id desc
+    </select>
+    
 </mapper>

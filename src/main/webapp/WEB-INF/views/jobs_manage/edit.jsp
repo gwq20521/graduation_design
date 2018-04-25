@@ -46,11 +46,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <ol class="breadcrumb">
             <li><a>首页</a></li>
             <li>></li>
-            <li><a>***</a></li>
+            <li>工作管理</li>
             <li>></li>
-            <li><a>***</a></li>
-            <li>></li>
-            <li class="active">**修改</li>
+            <li class="active">任务管理</li>
         </ol>
     </div>
     <!--提示必填项部分-->
@@ -89,24 +87,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
              </div>
                 
 				<div class="col-xs-6 row ie-col-6">
-                    <span class="col-xs-3 glyphicon">* 主键：
+                    <span class="col-xs-3 glyphicon">* 指定员工：
                     </span>
                     <div class="col-xs-9 pad-0 row">
-                        <input type="text" class="col-xs-12 GL-add-require" id="id" value="">
-                    </div>
-                </div>
-				<div class="col-xs-6 row ie-col-6">
-                    <span class="col-xs-3 glyphicon">* 创建领导：
-                    </span>
-                    <div class="col-xs-9 pad-0 row">
-                        <input type="text" class="col-xs-12 GL-add-require" id="createUserId" value="">
-                    </div>
-                </div>
-				<div class="col-xs-6 row ie-col-6">
-                    <span class="col-xs-3 glyphicon">* 指定分配员工：
-                    </span>
-                    <div class="col-xs-9 pad-0 row">
-                        <input type="text" class="col-xs-12 GL-add-require" id="workUserId" value="">
+                        <!-- <input type="text" class="col-xs-12 GL-add-require" id="workUserId" value=""> -->
+                        <select id="workUserId" style="width:200px;" >
+                        	<option value="-1">请先选择员工</option>
+                        </select>
                     </div>
                 </div>
 				<div class="col-xs-6 row ie-col-6">
@@ -116,35 +103,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         <input type="text" class="col-xs-12 GL-add-require" id="jobInfo" value="">
                     </div>
                 </div>
-				<div class="col-xs-6 row ie-col-6">
-                    <span class="col-xs-3 glyphicon">* 工作状态 0-新建 1-进行中 2-已解决 3-已关闭 4-已驳回：
-                    </span>
-                    <div class="col-xs-9 pad-0 row">
-                        <input type="text" class="col-xs-12 GL-add-require" id="jobState" value="">
-                    </div>
-                </div>
-				<div class="col-xs-6 row ie-col-6">
-                    <span class="col-xs-3 glyphicon">* 创建时间：
-                    </span>
-                    <div class="col-xs-9 pad-0 row">
-                        <input type="text" class="col-xs-12 GL-add-require" id="createTime" value="">
-                    </div>
-                </div>
-				<div class="col-xs-6 row ie-col-6">
-                    <span class="col-xs-3 glyphicon">* 修改时间：
-                    </span>
-                    <div class="col-xs-9 pad-0 row">
-                        <input type="text" class="col-xs-12 GL-add-require" id="updateTime" value="">
-                    </div>
-                </div>
-				<div class="col-xs-6 row ie-col-6">
-                    <span class="col-xs-3 glyphicon">* 工作具体小结：
-                    </span>
-                    <div class="col-xs-9 pad-0 row">
-                        <input type="text" class="col-xs-12 GL-add-require" id="jobWorkInfo" value="">
-                    </div>
-                </div>
-        	 	
                 
         	 </div>
         </div>
@@ -154,36 +112,49 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </body>
 
 <script type="text/javascript">
+
+$(function(){
+	//获取部门经理下的所属员工
+	$.ajax({
+		url:'<%=path %>/employee/ajaxSelectSubEmpBySup',
+   		type:'post',
+   		cache:false,
+   		dataType:'json',
+   		contentType: "application/json;charset=UTF-8",
+       	success:function(data){
+       		var list = data.data.data;
+       		var _html = "<option value='0'>请选择所属员工</option>";
+		    for(var i=0;i<list.length;i++){
+		    	if (olddata.workUserId == list[i].id) {
+		    		_html += "<option value='"+list[i].id+"' selected>"+list[i].realname+"</option>";
+				} else {
+					_html += "<option value='"+list[i].id+"'>"+list[i].realname+"</option>";
+				}
+		    }
+		    $("#workUserId").html(_html);
+       	}, 
+       	error:function() {
+       		alert("异常！");
+       	}
+    });
+	
+});
+
 var jobs_manageParam = {};
 	jobs_manageParam.id;
-	jobs_manageParam.createUserId;
 	jobs_manageParam.workUserId;
 	jobs_manageParam.jobInfo;
-	jobs_manageParam.jobState;
-	jobs_manageParam.createTime;
-	jobs_manageParam.updateTime;
-	jobs_manageParam.jobWorkInfo;
 
 	$("#id").val(olddata.id);
-	$("#createUserId").val(olddata.createUserId);
-	$("#workUserId").val(olddata.workUserId);
+	//$("#workUserId").val(olddata.workUserId);
 	$("#jobInfo").val(olddata.jobInfo);
-	$("#jobState").val(olddata.jobState);
-	$("#createTime").val(olddata.createTime);
-	$("#updateTime").val(olddata.updateTime);
-	$("#jobWorkInfo").val(olddata.jobWorkInfo);
 
 	$("#save").click(function(){
 		var param = JSON.parse(JSON.stringify(jobs_manageParam));
 		
 					param.id=$("#id").val();
-					param.createUserId=$("#createUserId").val();
 					param.workUserId=$("#workUserId").val();
 					param.jobInfo=$("#jobInfo").val();
-					param.jobState=$("#jobState").val();
-					param.createTime=$("#createTime").val();
-					param.updateTime=$("#updateTime").val();
-					param.jobWorkInfo=$("#jobWorkInfo").val();
 				
 	    $.ajax({url:'<%=path %>/jobs_manage/update',
        		type:'post',

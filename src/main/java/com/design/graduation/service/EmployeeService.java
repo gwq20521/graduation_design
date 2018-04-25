@@ -71,4 +71,6 @@ public interface EmployeeService {
 
     ReturnData selectEmpIds();
 
+    ReturnData selectSubEmpListByJobId(String jobposId);
+
 }

@@ -14,6 +14,9 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.activiti.engine.impl.pvm.process.ActivityImpl;
+import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Task;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -33,6 +36,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSON;
+import com.design.graduation.controller.activiti.ActivitiConsoleUtils;
 import com.design.graduation.model.Employee;
 import com.design.graduation.model.JobsManage;
 import com.design.graduation.service.JobsManageService;
@@ -59,6 +63,9 @@ public class JobsManageController {
 
     @Resource
     private JobsManageService jobsManageService;
+
+    @Resource
+    private ActivitiConsoleUtils activitiConsoleUtils;
 
     /**
      * 数据展示页面
@@ -114,7 +121,79 @@ public class JobsManageController {
         Employee currentEmp = ((Employee) request.getSession().getAttribute("current_emp"));
 
         jobsManage.setCreateUserId(currentEmp.getId());
+
+        jobsManage.setJobState(0);//0-新建 1-进行中 2-已解决 3-已关闭 4-已驳回
+        jobsManage.setJobWorkInfo("");//重置为""
+
+        //开启相关的工作流程
+
         return jobsManageService.insert(jobsManage);//执行插入 JobsManage 操作
+    }
+
+    /**
+     * 对 attd_approve_list 的数据插入操作
+     * @param attdApproveList json 数据对象
+     * @param model spring model 操作
+     * @param request 请求数据
+     * @return ReturnData 通用数据对象
+     */
+    @RequestMapping(value = "/finishTask", method = RequestMethod.POST)
+    @ResponseBody
+    public ReturnData finishTask(Model model, HttpServletRequest request) {
+        //Employee currentEmp = ((Employee) request.getSession().getAttribute("current_emp"));
+
+        String jobsManageId = request.getParameter("jobsManageId");
+        String jobWorkInfo = request.getParameter("jobWorkInfo");
+
+        JobsManage jobsManage = new JobsManage();
+        jobsManage.setId(Integer.valueOf(jobsManageId));
+        jobsManage.setJobWorkInfo(jobWorkInfo);
+
+        //任务执行到下一级
+        String taskId = request.getParameter("taskId");
+
+        //得到当前正在执行的流程实例的节点的id的值
+        ActivityImpl activityImpl = activitiConsoleUtils.getActivityImplByTaskId(taskId);
+        String name = activityImpl.getProperty("name").toString();
+
+        ProcessInstance pi = null;
+
+        //if ("提交申请".equals(name)) {
+        /*if ("完成任务【部门职员】".equals(name)) {
+            jobsManage.setJobState(2);//0-新建 1-进行中 2-已解决
+            jobsManageService.update(jobsManage);
+        
+            //完成当前的任务,并且返回一个流程实例
+            pi = activitiConsoleUtils.finishTask(taskId);
+        }*/
+
+        /*if (pi == null) {//该流程已经完成了
+            jobsManage.setJobState(2);//0-新建 1-进行中 2-已解决
+            jobsManageService.update(jobsManage);
+        }*/
+
+        pi = activitiConsoleUtils.finishTask(taskId);
+
+        jobsManage.setJobState(2);//0-新建 1-进行中 2-已解决
+
+        return jobsManageService.update(jobsManage);
+    }
+
+    /**
+     * 对 attd_approve_list 的数据插入操作
+     * @param attdApproveList json 数据对象
+     * @param model spring model 操作
+     * @param request 请求数据
+     * @return ReturnData 通用数据对象
+     */
+    @RequestMapping(value = "/viewJobWorkInfo", method = RequestMethod.POST)
+    @ResponseBody
+    public ReturnData viewJobWorkInfo(Model model, HttpServletRequest request) {
+        String jobsManageId = request.getParameter("jobsManageId");
+
+        JobsManage jobsManage = new JobsManage();
+        jobsManage.setId(Integer.valueOf(jobsManageId));
+        return jobsManageService.selectByParam(null, jobsManage);
     }
 
     /**
@@ -200,6 +279,55 @@ public class JobsManageController {
 
         //分页查询
         return jobsManageService.selectRelationData(page, rows, order_by, jobsManage);
+    }
+
+    /**
+     * 对 contract 的数据分页查询操作 - 关联查询
+     * @param contract json 数据对象
+     * @param model spring model 操作
+     * @param request 请求数据
+     * @return ReturnData 通用数据对象
+     */
+    @RequestMapping(value = "/selectRelationDataByEmpRealname", method = RequestMethod.POST)
+    @ResponseBody
+    public JqGridJsonBean selectRelationDataByEmpRealname(String GridParam, Model model, HttpServletRequest request) {
+        JobsManage jobsManage = new Gson().fromJson(GridParam, JobsManage.class);//json 转对象
+
+        String page = request.getParameter("page");//第几页
+        String rows = request.getParameter("rows");//一页有几行
+        String order_by = request.getParameter("order_by");//排序
+
+        String empRealname = request.getParameter("empRealname");//
+
+        //分页查询
+        return jobsManageService.selectRelationDataByEmpRealname(page, rows, order_by, jobsManage, empRealname);
+    }
+
+    @RequestMapping(value = "/deleteById", method = RequestMethod.POST)
+    @ResponseBody
+    public ReturnData deleteById(Model model, HttpServletRequest request) {
+        ReturnData rd = new ReturnData();
+        String id = request.getParameter("id");
+        if ((id == null) || ("".equals(id))) {
+            rd.setCode("ERROR");
+            rd.setMsg("id为空");
+        }
+        else {
+            //判断相关的任务是否存在，存在的话，做删除操作
+            List<Task> taskList = activitiConsoleUtils.getTaskListByBusinessKey(id);
+
+            //删除任务并返回流程实例
+            for (Task task : taskList) {
+                activitiConsoleUtils.deleteProcessInstance(task);
+            }
+
+            JobsManage jobsManage = new JobsManage();
+            int idI = Integer.valueOf(id);//BusinessKey
+            jobsManage.setId(idI);
+
+            rd = jobsManageService.delete(jobsManage);//
+        }
+        return rd;
     }
 
     /**

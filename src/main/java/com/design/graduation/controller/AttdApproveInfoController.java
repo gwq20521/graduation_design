@@ -244,6 +244,29 @@ public class AttdApproveInfoController {
     }
 
     /**
+     * 对 contract 的数据分页查询操作 - 关联查询
+     * @param contract json 数据对象
+     * @param model spring model 操作
+     * @param request 请求数据
+     * @return ReturnData 通用数据对象
+     */
+    @RequestMapping(value = "/selectRelationDataByEmpRealname", method = RequestMethod.POST)
+    @ResponseBody
+    public JqGridJsonBean selectRelationDataByEmpRealname(String GridParam, Model model, HttpServletRequest request) {
+        AttdApproveInfo attdApproveInfo = new Gson().fromJson(GridParam, AttdApproveInfo.class);//json 转对象
+
+        String page = request.getParameter("page");//第几页
+        String rows = request.getParameter("rows");//一页有几行
+        String order_by = request.getParameter("order_by");//排序
+
+        String empRealname = request.getParameter("empRealname");//
+
+        //分页查询
+        return attdApproveInfoService.selectRelationDataByEmpRealname(page, rows, order_by, attdApproveInfo,
+                empRealname);
+    }
+
+    /**
      * 对 attd_approve_info 的数据查询操作不分页
      * @param attdApproveInfo json 数据对象
      * @param model spring model 操作

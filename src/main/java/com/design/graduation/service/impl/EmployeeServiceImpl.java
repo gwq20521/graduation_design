@@ -272,4 +272,23 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeMapper.selectRealnameById(id);
     }
 
+    @Override
+    public ReturnData selectSubEmpListByJobId(String jobposId) {
+        ReturnData rd = new ReturnData();
+        try {
+            List<Employee> data = employeeMapper.selectSubEmpListByJobId(jobposId);
+            Map<String, Object> dataMap = new HashMap<String, Object>();
+            dataMap.put("data", data);
+            rd.setCode("OK");
+            rd.setData(dataMap);
+        }
+        catch (Exception e) {
+            this.logger.error(e.getMessage());
+
+            rd.setCode("ERROR");
+            rd.setMsg(e.getMessage());
+        }
+        return rd;
+    }
+
 }

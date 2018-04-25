@@ -8,6 +8,7 @@ package com.design.graduation.controller;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +37,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSON;
 import com.design.graduation.model.Employee;
+import com.design.graduation.model.Jobpos;
 import com.design.graduation.service.EmployeeService;
+import com.design.graduation.service.JobposService;
 import com.design.graduation.util.JqGridJsonBean;
 import com.design.graduation.util.ReturnData;
 import com.google.gson.Gson;
@@ -60,6 +63,9 @@ public class EmployeeController {
 
     @Resource
     private EmployeeService employeeService;
+
+    @Resource
+    private JobposService jobposService;
 
     /**
      * 数据展示页面
@@ -204,6 +210,55 @@ public class EmployeeController {
     @ResponseBody
     public ReturnData ajaxSelectMaxEmpCode(HttpServletRequest request) {
         return employeeService.ajaxSelectMaxEmpCode();
+    }
+
+    @RequestMapping({ "/ajaxSelectSubEmpBySup" })
+    @ResponseBody
+    public ReturnData ajaxSelectSubEmpBySup(HttpServletRequest request) {
+        ReturnData rd = new ReturnData();
+
+        //首先获取到当前用户的jobId
+        Employee currentEmp = ((Employee) request.getSession().getAttribute("current_emp"));
+        int jobId = currentEmp.getJobposId();
+
+        //通过 jobId 查询出工作编码
+        Jobpos jobpos = new Jobpos();
+        jobpos.setId(jobId);
+        ReturnData rdJobpos = jobposService.selectByParam(null, jobpos);
+        List<Jobpos> dataJobpos = (List<Jobpos>) rdJobpos.getData().get("data");
+        String jobIdStr = dataJobpos.get(0).getJobposCode();
+
+        if (jobIdStr.length() != 6) {
+            rd.setCode("ERROR");
+            rd.setMsg("非部门经理");
+        }
+        else {
+            //获取到子工作职位的用户的jobpos编码的前缀
+            jobIdStr = jobIdStr.substring(0, 5);
+            ReturnData rdTemp = jobposService.selectIdListBySubId(jobIdStr);
+            List<Integer> data = (List<Integer>) rdTemp.getData().get("data");
+
+            //需要把部门经理自身给屏蔽掉
+            Iterator<Integer> iter = data.iterator();
+            while (iter.hasNext()) {
+                Integer item = iter.next();
+                if (jobId == item) {
+                    iter.remove();
+                }
+            }
+            //System.out.println(strList);
+
+            if (data.size() < 0) {
+                rd.setCode("ERROR");
+                rd.setMsg("没有所属员工");
+            }
+            else {
+                String strListStr = data.toString();
+                String jobIdListStr = strListStr.substring(1, (strListStr.length() - 1));
+                rd = employeeService.selectSubEmpListByJobId(jobIdListStr);
+            }
+        }
+        return rd;
     }
 
     /**
