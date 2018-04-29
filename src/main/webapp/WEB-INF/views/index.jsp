@@ -1,4 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -48,10 +49,23 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             <li role="presentation">
                 <a href="#ssztgl-menu" class="nav-header" data-toggle="collapse"><span class="glyphicon glyphicon-folder-open"></span><span>人事信息管理</span></a>
                 <ul id="ssztgl-menu" class="nav nav-list collapse in">
+				
+				<shiro:hasPermission name="department_show">
                     <li><a onclick="jumpIframe('department/show')"><span class="glyphicon glyphicon-menu-right"></span><span>部门信息管理</span></a></li>
+				</shiro:hasPermission>
+				
+				<shiro:hasPermission name="jobpos_show">
                     <li><a onclick="jumpIframe('jobpos/show')"><span class="glyphicon glyphicon-menu-right"></span><span>职位信息管理</span></a></li>
+				</shiro:hasPermission>
+                    
+				<shiro:hasPermission name="employee_show">
                 	<li><a onclick="jumpIframe('employee/show')"><span class="glyphicon glyphicon-menu-right"></span><span>用户信息管理</span></a></li>
+				</shiro:hasPermission>
+                	
+				<shiro:hasPermission name="contract_show">
                     <li><a onclick="jumpIframe('contract/show')"><span class="glyphicon glyphicon-menu-right"></span><span>合同信息管理</span></a></li>
+				</shiro:hasPermission>
+				
                 </ul>
             </li>
 			<li role="presentation">
@@ -68,8 +82,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	                
 	                <li><a href="#hzsml-menu" class="nav-header" data-toggle="collapse"><span class="glyphicon glyphicon-triangle-right"></span><span>考勤管理</span></a></li>
 	                <ul id="hzsml-menu" class="nav nav-list collapse in">
+	                
+					<shiro:hasPermission name="attendance_show">
 	                	<li><a onclick="jumpIframe('attendance/show')"><span class="glyphicon glyphicon-menu-right"></span><span>考勤数据</span></a></li>
+					</shiro:hasPermission>
+				
+					<shiro:hasPermission name="attd_approve_info_show">
 	                	<li><a onclick="jumpIframe('attd_approve_info/show')"><span class="glyphicon glyphicon-menu-right"></span><span>考勤审批提交</span></a></li>
+					</shiro:hasPermission>
+					
 	                </ul>
 	                
 	                <!-- <li><a href="#hzsml-menu" class="nav-header" data-toggle="collapse"><span class="glyphicon glyphicon-triangle-right"></span><span>任务管理</span></a></li>
@@ -77,12 +98,23 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	                	<li><a onclick="jumpIframe('jobs_manage/show')"><span class="glyphicon glyphicon-menu-right"></span><span>任务分配</span></a></li>
 	                </ul> -->
 	                
+	                
+				<shiro:hasPermission name="jobs_manage_show">
                     <li><a onclick="jumpIframe('jobs_manage/show')"><span class="glyphicon glyphicon-menu-right"></span><span>任务分配</span></a></li>
+				</shiro:hasPermission>
+					
                     
 	                <li><a href="#hzsml-menu" class="nav-header" data-toggle="collapse"><span class="glyphicon glyphicon-triangle-right"></span><span>业务流程管理</span></a></li>
 	                <ul id="hzsml-menu" class="nav nav-list collapse in">
+	                
+					<shiro:hasPermission name="activiti_flow_showTask">
 	                	<li><a onclick="jumpIframe('activiti_flow/showTask')"><span class="glyphicon glyphicon-menu-right"></span><span>任务执行</span></a></li>
+					</shiro:hasPermission>
+	                	
+					<shiro:hasPermission name="activiti_flow_show">
 	                	<li><a onclick="jumpIframe('activiti_flow/show')"><span class="glyphicon glyphicon-menu-right"></span><span>业务流程部署</span></a></li>
+					</shiro:hasPermission>
+					
 	                </ul>
 	                
                 </ul>
@@ -96,7 +128,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     </div>
     <div class="side-right" style="overflow:hidden;">
         <Iframe src="<%=path %>/rest/welcome" width="100%" height="99.5%" frameborder="0" id="plc-iframe" onload="iframeonload()"></Iframe>
-        <%-- <Iframe src="<%=path %>/jobs_manage/show" width="100%" height="99.5%" frameborder="0" id="plc-iframe" onload="iframeonload()"></Iframe> --%>
+        <%-- <Iframe src="<%=path %>/department/show" width="100%" height="99.5%" frameborder="0" id="plc-iframe" onload="iframeonload()"></Iframe> --%>
     </div>
 
 </div>

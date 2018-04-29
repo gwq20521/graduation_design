@@ -16,33 +16,33 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.design.graduation.dao.EmpFriendInfoMapper;
-import com.design.graduation.model.EmpFriendInfo;
-import com.design.graduation.service.EmpFriendInfoService;
+import com.design.graduation.dao.DeptPermMapper;
+import com.design.graduation.model.DeptPerm;
+import com.design.graduation.service.DeptPermService;
 import com.design.graduation.util.ReturnData;
 import com.design.graduation.util.JqGridJsonBean;
 
  /**
  * <p>服务层接口实现</p>
- * <p>Table: emp_friend_info - </p>
+ * <p>Table: dept_perm - </p>
  *
  * @since ${.now}
  */
 @Service
-public class EmpFriendInfoServiceImpl implements EmpFriendInfoService{
+public class DeptPermServiceImpl implements DeptPermService{
 
 	private Logger logger = Logger.getLogger(this.getClass().getName()); 
 	@Resource
-	private EmpFriendInfoMapper empFriendInfoMapper;
+	private DeptPermMapper deptPermMapper;
 	
 	/**
-	 * 将 EmpFriendInfo 插入到数据库中
+	 * 将 DeptPerm 插入到数据库中
 	 */
-	public ReturnData insert(EmpFriendInfo empFriendInfo) {
+	public ReturnData insert(DeptPerm deptPerm) {
 		// TODO Auto-generated method stub
 		ReturnData rd = new ReturnData();
 		try {
-			empFriendInfoMapper.insert(empFriendInfo);
+			deptPermMapper.insert(deptPerm);
 			rd.setCode("OK");
 			rd.setMsg("数据插入成功 ");
 		}catch(Exception e){
@@ -55,13 +55,13 @@ public class EmpFriendInfoServiceImpl implements EmpFriendInfoService{
 	}
 	
 	/**
-	 * 将 EmpFriendInfo 中的参数 删除数据库中的数据
+	 * 将 DeptPerm 中的参数 删除数据库中的数据
 	 */
-	public ReturnData delete(EmpFriendInfo empFriendInfo) {
+	public ReturnData delete(DeptPerm deptPerm) {
 		// TODO Auto-generated method stub
 		ReturnData rd = new ReturnData();
 		try {
-			empFriendInfoMapper.delete(empFriendInfo);
+			deptPermMapper.delete(deptPerm);
 			rd.setCode("OK");
 			rd.setMsg("数据删除成功 ");
 		}catch(Exception e){
@@ -73,12 +73,12 @@ public class EmpFriendInfoServiceImpl implements EmpFriendInfoService{
 	}
 	
 	/**
-	 * 将 EmpFriendInfo 中的参数 批量删除数据库中的数据
+	 * 将 DeptPerm 中的参数 批量删除数据库中的数据
 	 */
     public ReturnData deleteBatch(String[] ids) {
 		ReturnData rd = new ReturnData();
 		try {
-		    empFriendInfoMapper.deleteBatch(ids);
+		    deptPermMapper.deleteBatch(ids);
 		    rd.setCode("OK");
 		    rd.setMsg("数据删除成功 ");
 		} catch (Exception e) {
@@ -89,13 +89,13 @@ public class EmpFriendInfoServiceImpl implements EmpFriendInfoService{
     }
 
 	/**
-	 * 依据 EmpFriendInfo 中的主键修改数据库中的数据
+	 * 依据 DeptPerm 中的主键修改数据库中的数据
 	 */
-	public ReturnData update(EmpFriendInfo empFriendInfo) {
+	public ReturnData update(DeptPerm deptPerm) {
 		// TODO Auto-generated method stub
 		ReturnData rd = new ReturnData();
 		try {
-			empFriendInfoMapper.update(empFriendInfo);
+			deptPermMapper.update(deptPerm);
 			rd.setCode("OK");
 			rd.setMsg("数据删除成功 ");
 		}catch(Exception e){
@@ -107,9 +107,9 @@ public class EmpFriendInfoServiceImpl implements EmpFriendInfoService{
 	}
 	
 	/**
-	 * 执行 EmpFriendInfo 的分页查询
+	 * 执行 DeptPerm 的分页查询
 	 */
-	public JqGridJsonBean select(String page,String rows,String order_by, EmpFriendInfo empFriendInfo) {
+	public JqGridJsonBean select(String page,String rows,String order_by, DeptPerm deptPerm) {
 		// TODO Auto-generated method stub
 		JqGridJsonBean jgjb = new JqGridJsonBean();
 		try {
@@ -122,11 +122,11 @@ public class EmpFriendInfoServiceImpl implements EmpFriendInfoService{
     			order_by =  "id";
 			} 
 			
-			//查询EmpFriendInfo总数据量
-			int count = empFriendInfoMapper.selectCount(empFriendInfo);
+			//查询DeptPerm总数据量
+			int count = deptPermMapper.selectCount(deptPerm);
 			//根据查询条件查询总页数
 			int pages = (count%Integer.parseInt(rows))==0?(count/_rows):((count/_rows)+1);
-			List<EmpFriendInfo> data = empFriendInfoMapper.selectData(empFriendInfo,_rows,(_page-1)*_rows,order_by);
+			List<DeptPerm> data = deptPermMapper.selectData(deptPerm,_rows,(_page-1)*_rows,order_by);
 			jgjb.setPage(_page);// 第几页
 			jgjb.setRecords(count);// 总数据量
 			jgjb.setTotal(pages);// 总页数
@@ -139,9 +139,9 @@ public class EmpFriendInfoServiceImpl implements EmpFriendInfoService{
 	}
 	
 	/**
-	 * 执行 EmpFriendInfo 的分页查询 - 关联查询
+	 * 执行 DeptPerm 的分页查询 - 关联查询
 	 */
-	public JqGridJsonBean selectRelationData(String page,String rows,String order_by, EmpFriendInfo empFriendInfo) {
+	public JqGridJsonBean selectRelationData(String page,String rows,String order_by, DeptPerm deptPerm) {
 		// TODO Auto-generated method stub
 		JqGridJsonBean jgjb = new JqGridJsonBean();
 		try {
@@ -154,11 +154,11 @@ public class EmpFriendInfoServiceImpl implements EmpFriendInfoService{
     			order_by =  "id";
 			} 
 			
-			//查询EmpFriendInfo总数据量
-			int count = empFriendInfoMapper.selectRelationCount(empFriendInfo);
+			//查询DeptPerm总数据量
+			int count = deptPermMapper.selectRelationCount(deptPerm);
 			//根据查询条件查询总页数
 			int pages = (count%Integer.parseInt(rows))==0?(count/_rows):((count/_rows)+1);
-			List<Map<String, Object>> data = empFriendInfoMapper.selectRelationData(empFriendInfo,_rows,(_page-1)*_rows,order_by);
+			List<Map<String, Object>> data = deptPermMapper.selectRelationData(deptPerm,_rows,(_page-1)*_rows,order_by);
 			jgjb.setPage(_page);// 第几页
 			jgjb.setRecords(count);// 总数据量
 			jgjb.setTotal(pages);// 总页数
@@ -171,9 +171,9 @@ public class EmpFriendInfoServiceImpl implements EmpFriendInfoService{
 	}
 	
 	/**
-	 * 执行 EmpFriendInfo 的查询不分页
+	 * 执行 DeptPerm 的查询不分页
 	 */
-	public ReturnData selectByParam(String order_by, EmpFriendInfo empFriendInfo) {
+	public ReturnData selectByParam(String order_by, DeptPerm deptPerm) {
 		// TODO Auto-generated method stub
 		ReturnData rd = new ReturnData();
 		try {
@@ -184,7 +184,7 @@ public class EmpFriendInfoServiceImpl implements EmpFriendInfoService{
     			order_by =  "id";
 			} 
 
-			List<EmpFriendInfo> data = empFriendInfoMapper.selectByParam(empFriendInfo,order_by);
+			List<DeptPerm> data = deptPermMapper.selectByParam(deptPerm,order_by);
 			Map<String,Object> dataMap = new HashMap<String,Object>();
 			dataMap.put("data", data);
 			rd.setCode("OK");

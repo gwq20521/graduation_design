@@ -1,7 +1,7 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : LOCAL_MY
+Source Server         : LOCAL
 Source Server Version : 50627
 Source Host           : localhost:3306
 Source Database       : graduation1
@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50627
 File Encoding         : 65001
 
-Date: 2018-04-25 12:29:36
+Date: 2018-04-29 11:01:22
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -759,7 +759,7 @@ CREATE TABLE `attendance` (
   `attd_state` int(11) NOT NULL COMMENT '考勤状态 - 1 缺勤(全天旷工) - 2 半天旷工 - 3 正常上班 - 4 正常下班 - 5 迟到 - 6 早退 - 7 请假 - 8 调休 - 9 出差',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '考核日期',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of attendance
@@ -779,6 +779,14 @@ INSERT INTO `attendance` VALUES ('32', '1', '1', '2018-04-19 23:50:00');
 INSERT INTO `attendance` VALUES ('33', '2', '1', '2018-04-19 23:50:00');
 INSERT INTO `attendance` VALUES ('34', '3', '1', '2018-04-19 23:50:00');
 INSERT INTO `attendance` VALUES ('35', '9', '1', '2018-04-19 23:50:00');
+INSERT INTO `attendance` VALUES ('36', '1', '1', '2018-04-27 23:50:00');
+INSERT INTO `attendance` VALUES ('37', '2', '1', '2018-04-27 23:50:00');
+INSERT INTO `attendance` VALUES ('38', '3', '1', '2018-04-27 23:50:00');
+INSERT INTO `attendance` VALUES ('39', '9', '1', '2018-04-27 23:50:00');
+INSERT INTO `attendance` VALUES ('40', '10', '1', '2018-04-27 23:50:00');
+INSERT INTO `attendance` VALUES ('41', '11', '1', '2018-04-27 23:50:00');
+INSERT INTO `attendance` VALUES ('42', '12', '1', '2018-04-27 23:50:00');
+INSERT INTO `attendance` VALUES ('43', '13', '1', '2018-04-27 23:50:00');
 
 -- ----------------------------
 -- Table structure for contract
@@ -832,6 +840,80 @@ INSERT INTO `department` VALUES ('11', '0301', '项目管理部', '隶属于项�
 INSERT INTO `department` VALUES ('12', '0302', '测试部', '隶属于项目管理部', '2018-03-07 17:11:50', '1');
 
 -- ----------------------------
+-- Table structure for dept_perm
+-- ----------------------------
+DROP TABLE IF EXISTS `dept_perm`;
+CREATE TABLE `dept_perm` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `dept_id` int(11) NOT NULL COMMENT '部门ID',
+  `perm_id` int(11) NOT NULL COMMENT '权限ID',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of dept_perm
+-- ----------------------------
+INSERT INTO `dept_perm` VALUES ('5', '12', '8');
+INSERT INTO `dept_perm` VALUES ('6', '12', '9');
+INSERT INTO `dept_perm` VALUES ('7', '12', '10');
+INSERT INTO `dept_perm` VALUES ('8', '12', '12');
+INSERT INTO `dept_perm` VALUES ('14', '11', '8');
+INSERT INTO `dept_perm` VALUES ('15', '11', '9');
+INSERT INTO `dept_perm` VALUES ('16', '11', '10');
+INSERT INTO `dept_perm` VALUES ('17', '11', '12');
+INSERT INTO `dept_perm` VALUES ('23', '10', '8');
+INSERT INTO `dept_perm` VALUES ('24', '10', '9');
+INSERT INTO `dept_perm` VALUES ('25', '10', '10');
+INSERT INTO `dept_perm` VALUES ('26', '10', '12');
+INSERT INTO `dept_perm` VALUES ('32', '9', '8');
+INSERT INTO `dept_perm` VALUES ('33', '9', '9');
+INSERT INTO `dept_perm` VALUES ('34', '9', '10');
+INSERT INTO `dept_perm` VALUES ('35', '9', '12');
+INSERT INTO `dept_perm` VALUES ('41', '8', '8');
+INSERT INTO `dept_perm` VALUES ('42', '8', '9');
+INSERT INTO `dept_perm` VALUES ('43', '8', '10');
+INSERT INTO `dept_perm` VALUES ('44', '8', '12');
+INSERT INTO `dept_perm` VALUES ('50', '7', '8');
+INSERT INTO `dept_perm` VALUES ('51', '7', '9');
+INSERT INTO `dept_perm` VALUES ('52', '7', '10');
+INSERT INTO `dept_perm` VALUES ('53', '7', '12');
+INSERT INTO `dept_perm` VALUES ('59', '6', '8');
+INSERT INTO `dept_perm` VALUES ('60', '6', '9');
+INSERT INTO `dept_perm` VALUES ('61', '6', '10');
+INSERT INTO `dept_perm` VALUES ('62', '6', '12');
+INSERT INTO `dept_perm` VALUES ('64', '5', '2');
+INSERT INTO `dept_perm` VALUES ('65', '5', '3');
+INSERT INTO `dept_perm` VALUES ('66', '5', '4');
+INSERT INTO `dept_perm` VALUES ('67', '5', '5');
+INSERT INTO `dept_perm` VALUES ('68', '5', '8');
+INSERT INTO `dept_perm` VALUES ('69', '5', '9');
+INSERT INTO `dept_perm` VALUES ('70', '5', '10');
+INSERT INTO `dept_perm` VALUES ('71', '5', '12');
+INSERT INTO `dept_perm` VALUES ('72', '5', '13');
+INSERT INTO `dept_perm` VALUES ('77', '4', '8');
+INSERT INTO `dept_perm` VALUES ('78', '4', '9');
+INSERT INTO `dept_perm` VALUES ('79', '4', '10');
+INSERT INTO `dept_perm` VALUES ('80', '4', '12');
+INSERT INTO `dept_perm` VALUES ('86', '3', '8');
+INSERT INTO `dept_perm` VALUES ('87', '3', '9');
+INSERT INTO `dept_perm` VALUES ('88', '3', '10');
+INSERT INTO `dept_perm` VALUES ('89', '3', '12');
+INSERT INTO `dept_perm` VALUES ('95', '2', '8');
+INSERT INTO `dept_perm` VALUES ('96', '2', '9');
+INSERT INTO `dept_perm` VALUES ('97', '2', '10');
+INSERT INTO `dept_perm` VALUES ('98', '2', '12');
+INSERT INTO `dept_perm` VALUES ('99', '2', '13');
+INSERT INTO `dept_perm` VALUES ('100', '1', '2');
+INSERT INTO `dept_perm` VALUES ('101', '1', '3');
+INSERT INTO `dept_perm` VALUES ('102', '1', '4');
+INSERT INTO `dept_perm` VALUES ('103', '1', '5');
+INSERT INTO `dept_perm` VALUES ('104', '1', '8');
+INSERT INTO `dept_perm` VALUES ('105', '1', '9');
+INSERT INTO `dept_perm` VALUES ('106', '1', '10');
+INSERT INTO `dept_perm` VALUES ('107', '1', '12');
+INSERT INTO `dept_perm` VALUES ('108', '1', '13');
+
+-- ----------------------------
 -- Table structure for employee
 -- ----------------------------
 DROP TABLE IF EXISTS `employee`;
@@ -845,7 +927,7 @@ CREATE TABLE `employee` (
   `jobpos_id` int(11) NOT NULL COMMENT '所属职位',
   `register_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of employee
@@ -858,6 +940,7 @@ INSERT INTO `employee` VALUES ('10', '005', 'ttxxx', 'ttxxx', 'ttxxx222', '2018-
 INSERT INTO `employee` VALUES ('11', '006', '111', '111', '111', '2018-04-23', '41', '2018-04-23 16:42:56');
 INSERT INTO `employee` VALUES ('12', '007', '222', '222', '222', '2018-04-23', '42', '2018-04-23 16:43:08');
 INSERT INTO `employee` VALUES ('13', '008', '333', '333', '333', '2018-04-25', '5', '2018-04-24 16:50:35');
+INSERT INTO `employee` VALUES ('14', '009', '444', '444', '444', '2018-04-29', '47', '2018-04-29 10:59:08');
 
 -- ----------------------------
 -- Table structure for emp_friend
@@ -1000,3 +1083,35 @@ CREATE TABLE `jobs_manage` (
 -- ----------------------------
 INSERT INTO `jobs_manage` VALUES ('3', '11', '12', '奥术大师大啊', '2', '2018-04-24 23:04:30', '2018-04-24 23:04:30', '奥术大师大');
 INSERT INTO `jobs_manage` VALUES ('4', '11', '12', '6666777', '0', '2018-04-24 23:36:04', '2018-04-24 23:36:04', '');
+
+-- ----------------------------
+-- Table structure for permission
+-- ----------------------------
+DROP TABLE IF EXISTS `permission`;
+CREATE TABLE `permission` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(255) NOT NULL COMMENT '权限名称',
+  `type` int(11) NOT NULL COMMENT '所属类别-1-菜单 2-权限',
+  `percode` varchar(255) DEFAULT NULL COMMENT '权限编码',
+  `url` varchar(255) DEFAULT NULL COMMENT '被访问的链接',
+  `parent_id` int(11) NOT NULL COMMENT '所属的上级菜单ID',
+  `available` int(11) NOT NULL COMMENT '是否可用 - 0-不可用 1-可用',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of permission
+-- ----------------------------
+INSERT INTO `permission` VALUES ('1', '人事信息管理', '1', null, null, '0', '1');
+INSERT INTO `permission` VALUES ('2', '部门信息管理', '1', 'department_show', 'department/show', '1', '1');
+INSERT INTO `permission` VALUES ('3', '职位信息管理', '1', 'jobpos_show', 'jobpos/show', '1', '1');
+INSERT INTO `permission` VALUES ('4', '用户信息管理', '1', 'employee_show', 'employee/show', '1', '1');
+INSERT INTO `permission` VALUES ('5', '合同信息管理', '1', 'contract_show', 'contract/show', '1', '1');
+INSERT INTO `permission` VALUES ('6', '工作管理', '1', null, null, '0', '1');
+INSERT INTO `permission` VALUES ('7', '考勤管理', '1', null, null, '6', '1');
+INSERT INTO `permission` VALUES ('8', '考勤数据', '1', 'attendance_show', 'attendance/show', '7', '1');
+INSERT INTO `permission` VALUES ('9', '考勤审批提交', '1', 'attd_approve_info_show', 'attd_approve_info/show', '7', '1');
+INSERT INTO `permission` VALUES ('10', '任务分配', '1', 'jobs_manage_show', 'jobs_manage/show', '6', '1');
+INSERT INTO `permission` VALUES ('11', '业务流程管理', '1', null, null, '6', '1');
+INSERT INTO `permission` VALUES ('12', '任务执行', '1', 'activiti_flow_showTask', 'activiti_flow/showTask', '11', '1');
+INSERT INTO `permission` VALUES ('13', '业务流程部署', '1', 'activiti_flow_show', 'activiti_flow/show', '11', '1');

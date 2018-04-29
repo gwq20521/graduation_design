@@ -249,4 +249,9 @@ public class JobposServiceImpl implements JobposService {
         return rd;
     }
 
+    @Override
+    public int selectDeptIdById(Integer jobposId) {
+        return jobposMapper.selectDeptIdById(jobposId);
+    }
+
 }

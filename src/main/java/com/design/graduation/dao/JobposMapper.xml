@@ -235,11 +235,17 @@
     
 	<!-- 查询设备类型和设备类型ID 的 全查操作 -->
 	<select id="ajaxSelectJobposByDeptId" resultType="java.util.Map">
-		select id,jobpos_name from jobpos WHERE dept_id=${deptId};;
+		select id,jobpos_name from jobpos WHERE dept_id=${deptId};
 	</select>
 	
 	<select id="selectIdListBySubId" resultType="java.lang.Integer">
 		select id from jobpos WHERE jobpos_code LIKE CONCAT(CONCAT('%', ${subId}), '%');
 	</select>
 	
+    <select id="selectDeptIdById" resultType="java.lang.Integer">
+    	select dept_id from jobpos 
+    	WHERE id = ${jobposId};
+    </select>
+    
+    
 </mapper>

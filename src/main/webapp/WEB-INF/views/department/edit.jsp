@@ -45,7 +45,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	
 	<script type="text/javascript">
 		var olddata = JSON.parse('${olddata}');
+		
+		var permValue = '${permValue}';
 
+		var permValueArray = permValue.split(",");
 	</script>
 
 </head>
@@ -129,6 +132,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     </div>
                 </div>
         	 	
+				<div class="col-xs-6 row ie-col-6">
+                    <span class="col-xs-3 glyphicon">* 权限
+                    </span>
+                    <div class="col-xs-9 pad-0 row" id="permDivId">
+                        
+                    </div>
+                </div>
+        	 	
                 
         	 </div>
         </div>
@@ -138,6 +149,56 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </body>
 
 <script type="text/javascript">
+
+$(function(){
+	function isInArray(arr,value){
+	    for(var i = 0; i < arr.length; i++){
+	        if(value == arr[i]){
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	
+	/* 获取到权限信息 */
+	$.ajax({
+		url:'<%=path %>/permission/ajaxSelectPermListByUse',
+   		type:'post',
+       	success:function(data){
+       		var permDataList = data.data.data;
+       		var htmlStr = "";
+
+       		for (var int = 0; int < permDataList.length; int++) {
+       			var permData = permDataList[int];
+
+       			if (isInArray(permValueArray,permData.id)) {
+   					htmlStr+="<input type='checkbox' name='permName' value="+permData.id+" checked>"+permData.name+"";
+				} else {
+					htmlStr+="<input type='checkbox' name='permName' value="+permData.id+" >"+permData.name+"";
+				}
+       			
+       			htmlStr+="<br/>";
+			}
+       		$("#permDivId").html(htmlStr);
+       	}, 
+       	error:function() {
+       		alert("异常！");
+       	}
+    });
+
+});
+
+var permValue =[]; 
+
+function getPermValue(){ //jquery获取复选框值 
+	permValue =[]; 
+	$('input[name="permName"]:checked').each(function(){ 
+		permValue.push($(this).val()); 
+	}); 
+
+	//alert(permValue.length==0 ?'你还没有选择任何内容！':permValue);//2,3,4
+}
+
 var departmentParam = {};
 	departmentParam.id;
 	departmentParam.deptCode;
@@ -177,13 +238,15 @@ var departmentParam = {};
 					var isDis = $("input[name='isDisName']:checked").val();
 
 					param.isDis=isDis;
+
+					getPermValue();
 					
 	    $.ajax({url:'<%=path %>/department/update',
        		type:'post',
        		cache:false,
        		dataType:'json',
-       		data: JSON.stringify(param),
-       		contentType: "application/json;charset=UTF-8",
+       		data: {GridParam:JSON.stringify(param),
+       			permValue:permValue+""},
            	success:function(data){
            		if(data.code == "OK"){
            			alert("数据修改成功");

@@ -33,101 +33,104 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSON;
-import com.design.graduation.model.EmpFriend;
-import com.design.graduation.service.EmpFriendService;
+import com.design.graduation.model.DeptPerm;
+import com.design.graduation.model.Employee;
+import com.design.graduation.service.DeptPermService;
 import com.design.graduation.util.JqGridJsonBean;
 import com.design.graduation.util.ReturnData;
 import com.google.gson.Gson;
 
 /**
  * <p>控制层</p>
- * <p>Table: emp_friend - </p>
- * emp_friend insert 增加数据,
- * emp_friend delete 删除数据,
- * emp_friend update 修改数据,
- * emp_friend select 查询数据,
- * emp_friend export 导出数据,
- * emp_friend import 导入数据
+ * <p>Table: dept_perm - </p>
+ * dept_perm insert 增加数据,
+ * dept_perm delete 删除数据,
+ * dept_perm update 修改数据,
+ * dept_perm select 查询数据,
+ * dept_perm export 导出数据,
+ * dept_perm import 导入数据
  * @since ${.now}
  */
 @Controller
-@RequestMapping(value = "/emp_friend")
-public class EmpFriendController {
+@RequestMapping(value = "/dept_perm")
+public class DeptPermController {
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     @Resource
-    private EmpFriendService empFriendService;
+    private DeptPermService deptPermService;
 
     /**
      * 数据展示页面
      * @return
      */
-    @RequiresPermissions(value = "emp_friend_show")
+    @RequiresPermissions(value = "dept_perm_show")
     @RequestMapping(value = "/show", method = RequestMethod.GET)
     public String show(Model model, HttpServletRequest request) {
-        return "emp_friend/show";
+        return "dept_perm/show";
     }
 
     /**
      * 数据新增页面
      * @return
      */
-    @RequiresPermissions(value = "emp_friend_add")
+    @RequiresPermissions(value = "dept_perm_add")
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String add(Model model, HttpServletRequest request) {
-        return "emp_friend/add";
+        return "dept_perm/add";
     }
 
     /**
      * 数据修改页面
      * @return
      */
-    @RequiresPermissions(value = "emp_friend_edit")
+    @RequiresPermissions(value = "dept_perm_edit")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String edit(Model model, HttpServletRequest request) {
         String id = request.getParameter("id");
 
-        EmpFriend empFriend = new EmpFriend();
-        empFriend.setId(Integer.valueOf(Integer.parseInt(id)));
+        DeptPerm deptPerm = new DeptPerm();
+        deptPerm.setId(Integer.valueOf(Integer.parseInt(id)));
 
-        ReturnData rd = empFriendService.selectByParam(null, empFriend);
+        ReturnData rd = deptPermService.selectByParam(null, deptPerm);
         if (rd.getCode().equals("OK")) {
-            List<EmpFriend> data = (List<EmpFriend>) rd.getData().get("data");
+            List<DeptPerm> data = (List<DeptPerm>) rd.getData().get("data");
 
             model.addAttribute("olddata", JSON.toJSONString(data.get(0)));
         }
-        return "emp_friend/edit";
+        return "dept_perm/edit";
     }
 
     /**
-     * 对 emp_friend 的数据插入操作
-     * @param empFriend json 数据对象
+     * 对 dept_perm 的数据插入操作
+     * @param deptPerm json 数据对象
      * @param model spring model 操作
      * @param request 请求数据
      * @return ReturnData 通用数据对象
      */
     @RequestMapping(value = "/insert", method = RequestMethod.POST, consumes = "application/json")
     @ResponseBody
-    public ReturnData insert(@RequestBody EmpFriend empFriend, Model model, HttpServletRequest request) {
-        return empFriendService.insert(empFriend);//执行插入 EmpFriend 操作
+    public ReturnData insert(@RequestBody DeptPerm deptPerm, Model model, HttpServletRequest request) {
+        Employee currentEmp = ((Employee) request.getSession().getAttribute("current_emp"));
+
+        return deptPermService.insert(deptPerm);//执行插入 DeptPerm 操作
     }
 
     /**
-     * 对 emp_friend 的数据删除操作
-     * @param empFriend json 数据对象
+     * 对 dept_perm 的数据删除操作
+     * @param deptPerm json 数据对象
      * @param model spring model 操作
      * @param request 请求数据
      * @return ReturnData 通用数据对象
      */
     @RequestMapping(value = "/delete", method = RequestMethod.POST, consumes = "application/json")
     @ResponseBody
-    public ReturnData delete(@RequestBody EmpFriend empFriend, Model model, HttpServletRequest request) {
-        return empFriendService.delete(empFriend);//执行删除 EmpFriend  操作
+    public ReturnData delete(@RequestBody DeptPerm deptPerm, Model model, HttpServletRequest request) {
+        return deptPermService.delete(deptPerm);//执行删除 DeptPerm  操作
     }
 
     /**
-     * 对 emp_friend 的数据批量删除操作
+     * 对 dept_perm 的数据批量删除操作
      * @param request 请求数据
      */
     @RequestMapping({ "/deleteBatch" })
@@ -140,27 +143,29 @@ public class EmpFriendController {
             rd.setMsg("ids为空");
         }
         else {
-            rd = empFriendService.deleteBatch(ids.split(","));
+            rd = deptPermService.deleteBatch(ids.split(","));
         }
         return rd;
     }
 
     /**
-     * 对 emp_friend 的数据修改操作
-     * @param empFriend json 数据对象
+     * 对 dept_perm 的数据修改操作
+     * @param deptPerm json 数据对象
      * @param model spring model 操作
      * @param request 请求数据
      * @return ReturnData 通用数据对象
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST, consumes = "application/json")
     @ResponseBody
-    public ReturnData update(@RequestBody EmpFriend empFriend, Model model, HttpServletRequest request) {
-        return empFriendService.update(empFriend);//执行 EmpFriend  操作
+    public ReturnData update(@RequestBody DeptPerm deptPerm, Model model, HttpServletRequest request) {
+        Employee currentEmp = ((Employee) request.getSession().getAttribute("current_emp"));
+
+        return deptPermService.update(deptPerm);//执行 DeptPerm  操作
     }
 
     /**
-     * 对 emp_friend 的数据分页查询操作
-     * @param empFriend json 数据对象
+     * 对 dept_perm 的数据分页查询操作
+     * @param deptPerm json 数据对象
      * @param model spring model 操作
      * @param request 请求数据
      * @return ReturnData 通用数据对象
@@ -168,19 +173,19 @@ public class EmpFriendController {
     @RequestMapping(value = "/select", method = RequestMethod.POST)
     @ResponseBody
     public JqGridJsonBean select(String GridParam, Model model, HttpServletRequest request) {
-        EmpFriend empFriend = new Gson().fromJson(GridParam, EmpFriend.class);//json 转对象
+        DeptPerm deptPerm = new Gson().fromJson(GridParam, DeptPerm.class);//json 转对象
 
         String page = request.getParameter("page");//第几页
         String rows = request.getParameter("rows");//一页有几行
         String order_by = request.getParameter("order_by");//排序
 
         //分页查询
-        return empFriendService.select(page, rows, order_by, empFriend);
+        return deptPermService.select(page, rows, order_by, deptPerm);
     }
 
     /**
-     * 对 emp_friend 的数据分页查询操作 - 关联查询
-     * @param emp_friend json 数据对象
+     * 对 dept_perm 的数据分页查询操作 - 关联查询
+     * @param dept_perm json 数据对象
      * @param model spring model 操作
      * @param request 请求数据
      * @return ReturnData 通用数据对象
@@ -188,34 +193,34 @@ public class EmpFriendController {
     @RequestMapping(value = "/selectRelationData", method = RequestMethod.POST)
     @ResponseBody
     public JqGridJsonBean selectRelationData(String GridParam, Model model, HttpServletRequest request) {
-        EmpFriend empFriend = new Gson().fromJson(GridParam, EmpFriend.class);//json 转对象
+        DeptPerm deptPerm = new Gson().fromJson(GridParam, DeptPerm.class);//json 转对象
 
         String page = request.getParameter("page");//第几页
         String rows = request.getParameter("rows");//一页有几行
         String order_by = request.getParameter("order_by");//排序
 
         //分页查询
-        return empFriendService.selectRelationData(page, rows, order_by, empFriend);
+        return deptPermService.selectRelationData(page, rows, order_by, deptPerm);
     }
 
     /**
-     * 对 emp_friend 的数据查询操作不分页
-     * @param empFriend json 数据对象
+     * 对 dept_perm 的数据查询操作不分页
+     * @param deptPerm json 数据对象
      * @param model spring model 操作
      * @param request 请求数据
      * @return ReturnData 通用数据对象
      */
     @RequestMapping(value = "/selectByParam", method = RequestMethod.POST, consumes = "application/json")
     @ResponseBody
-    public ReturnData selectByParam(@RequestBody EmpFriend empFriend, Model model, HttpServletRequest request) {
+    public ReturnData selectByParam(@RequestBody DeptPerm deptPerm, Model model, HttpServletRequest request) {
         String order_by = request.getParameter("order_by");//排序
 
-        return empFriendService.selectByParam(order_by, empFriend);
+        return deptPermService.selectByParam(order_by, deptPerm);
     }
 
     /**
-     * 对 emp_friend 的数据导出操作
-     * @param empFriend json 数据对象
+     * 对 dept_perm 的数据导出操作
+     * @param deptPerm json 数据对象
      * @param model spring model 操作
      * @param request 请求数据
      * @return ReturnData 通用数据对象
@@ -224,46 +229,40 @@ public class EmpFriendController {
     public void export(HttpServletRequest request, HttpServletResponse response) {
         //1、使用JSONObject
         String json = request.getParameter("json");
-        EmpFriend empFriend = new Gson().fromJson(json, EmpFriend.class);
+        DeptPerm deptPerm = new Gson().fromJson(json, DeptPerm.class);
 
         String page = request.getParameter("page");//第几页
         String rows = request.getParameter("rows");//一页有几行
         String order_by = request.getParameter("order_by");//排序
         //分页查询
-        JqGridJsonBean rd = empFriendService.select(page, rows, order_by, empFriend);
+        JqGridJsonBean rd = deptPermService.select(page, rows, order_by, deptPerm);
 
         //创建HSSFWorkbook对象(excel的文档对象)  
         HSSFWorkbook wb = new HSSFWorkbook();
         //建立新的sheet对象（excel的表单）  
-        HSSFSheet sheet = wb.createSheet("empFriend");
+        HSSFSheet sheet = wb.createSheet("deptPerm");
         //在sheet里创建第一行，参数为行索引(excel的行)，可以是0～65535之间的任何一个  
         HSSFRow row1 = sheet.createRow(0);
 
         //创建单元格并设置单元格内容  
         row1.createCell(1 - 1).setCellValue("主键");
-        row1.createCell(2 - 1).setCellValue("用户关系表述1");
-        row1.createCell(3 - 1).setCellValue("用户关系表述2");
-        row1.createCell(4 - 1).setCellValue("关系状态 0-正常 1-屏蔽");
-        row1.createCell(5 - 1).setCellValue("创建时间");
-        row1.createCell(6 - 1).setCellValue("修改时间");
+        row1.createCell(2 - 1).setCellValue("部门ID");
+        row1.createCell(3 - 1).setCellValue("权限ID");
         //在sheet里创建第三行  
         @SuppressWarnings("unchecked")
-        List<EmpFriend> maps = (List<EmpFriend>) rd.getRoot();
+        List<DeptPerm> maps = (List<DeptPerm>) rd.getRoot();
         for (int i = 0; i < maps.size(); i++) {
-            EmpFriend map = maps.get(i);
+            DeptPerm map = maps.get(i);
             HSSFRow row = sheet.createRow(i + 1);
             row.createCell(1 - 1).setCellValue(map.getId() + "");
-            row.createCell(2 - 1).setCellValue(map.getEmpId1() + "");
-            row.createCell(3 - 1).setCellValue(map.getEmpId2() + "");
-            row.createCell(4 - 1).setCellValue(map.getFriState() + "");
-            row.createCell(5 - 1).setCellValue(map.getCreateTime() + "");
-            row.createCell(6 - 1).setCellValue(map.getUpdateTime() + "");
+            row.createCell(2 - 1).setCellValue(map.getDeptId() + "");
+            row.createCell(3 - 1).setCellValue(map.getPermId() + "");
         }
 
         //输出Excel文件  
         try {
             ServletOutputStream output = response.getOutputStream();
-            String fileName = new String(("导出empFriend").getBytes(), "ISO8859_1");
+            String fileName = new String(("导出deptPerm").getBytes(), "ISO8859_1");
             response.setHeader("Content-disposition", "attachment; filename=" + fileName + ".xls");
             response.setContentType("application/binary;charset=utf-8");
             wb.write(output);
@@ -277,8 +276,8 @@ public class EmpFriendController {
     }
 
     /**
-     * 对 emp_friend 的数据导入操作
-     * @param empFriend json 数据对象
+     * 对 dept_perm 的数据导入操作
+     * @param deptPerm json 数据对象
      * @param model spring model 操作
      * @param request 请求数据
      * @return ReturnData 通用数据对象
@@ -307,11 +306,11 @@ public class EmpFriendController {
             if (sheet != null) {
                 for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
                     Row row = sheet.getRow(i);
-                    EmpFriend empFriend = new EmpFriend();
+                    DeptPerm deptPerm = new DeptPerm();
                     //System.out.println(row.getCell(0));
                     //此处自己添字段例如 myTable.set...(row.getCell(0))
 
-                    //empFriendService.insert(empFriend);  
+                    //deptPermService.insert(deptPerm);  
                 }
 
             }

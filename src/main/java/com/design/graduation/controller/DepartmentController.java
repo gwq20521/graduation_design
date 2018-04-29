@@ -7,6 +7,7 @@
 package com.design.graduation.controller;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -34,7 +35,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSON;
 import com.design.graduation.model.Department;
+import com.design.graduation.model.DeptPerm;
 import com.design.graduation.service.DepartmentService;
+import com.design.graduation.service.DeptPermService;
 import com.design.graduation.util.JqGridJsonBean;
 import com.design.graduation.util.ReturnData;
 import com.google.gson.Gson;
@@ -58,6 +61,9 @@ public class DepartmentController {
 
     @Resource
     private DepartmentService departmentService;
+
+    @Resource
+    private DeptPermService deptPermService;
 
     /**
      * 数据展示页面
@@ -87,9 +93,10 @@ public class DepartmentController {
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String edit(Model model, HttpServletRequest request) {
         String id = request.getParameter("id");
+        int deptId = Integer.valueOf(id);
 
         Department department = new Department();
-        department.setId(Integer.valueOf(Integer.parseInt(id)));
+        department.setId(deptId);
 
         ReturnData rd = departmentService.selectByParam(null, department);
         if (rd.getCode().equals("OK")) {
@@ -97,6 +104,28 @@ public class DepartmentController {
 
             model.addAttribute("olddata", JSON.toJSONString(data.get(0)));
         }
+
+        //获取权限信息
+        DeptPerm deptPerm = new DeptPerm();
+        deptPerm.setDeptId(deptId);
+
+        List<Integer> permValue = new ArrayList<Integer>();
+        ReturnData rdDeptPerm = deptPermService.selectByParam(null, deptPerm);
+        List<DeptPerm> dataDeptPerm = (List<DeptPerm>) rdDeptPerm.getData().get("data");
+        if (dataDeptPerm.size() > 0) {
+            for (int i = 0; i < dataDeptPerm.size(); i++) {
+                permValue.add(dataDeptPerm.get(i).getPermId());
+            }
+        }
+
+        String permValueStr = permValue.toString();
+
+        if (permValue.size() > 0) {
+            permValueStr = permValueStr.substring(1, permValueStr.length() - 1);
+        }
+
+        model.addAttribute("permValue", permValueStr);
+
         return "department/edit";
     }
 
@@ -107,10 +136,27 @@ public class DepartmentController {
      * @param request 请求数据
      * @return ReturnData 通用数据对象
      */
-    @RequestMapping(value = "/insert", method = RequestMethod.POST, consumes = "application/json")
+    @RequestMapping(value = "/insert", method = RequestMethod.POST)
     @ResponseBody
-    public ReturnData insert(@RequestBody Department department, Model model, HttpServletRequest request) {
-        return departmentService.insert(department);//执行插入 Department 操作
+    public ReturnData insert(String GridParam, Model model, HttpServletRequest request) {
+        Department department = new Gson().fromJson(GridParam, Department.class);//json 转对象
+
+        ReturnData rd = departmentService.insert(department);
+
+        int deptId = (int) rd.getData().get("data");
+
+        String permValue = request.getParameter("permValue");//2,3,4
+
+        //首先 - 新增设备的时候肯定是新增
+        String[] permValueArray = permValue.split(",");
+        for (int i = 0; i < permValueArray.length; i++) {
+            DeptPerm deptPerm = new DeptPerm();
+            deptPerm.setDeptId(deptId);
+            deptPerm.setPermId(Integer.valueOf(permValueArray[i]));
+            deptPermService.insert(deptPerm);
+        }
+
+        return rd;//执行插入 Department 操作
     }
 
     /**
@@ -152,9 +198,59 @@ public class DepartmentController {
      * @param request 请求数据
      * @return ReturnData 通用数据对象
      */
-    @RequestMapping(value = "/update", method = RequestMethod.POST, consumes = "application/json")
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public ReturnData update(@RequestBody Department department, Model model, HttpServletRequest request) {
+    public ReturnData update(String GridParam, Model model, HttpServletRequest request) {
+        Department department = new Gson().fromJson(GridParam, Department.class);//json 转对象
+
+        int deptId = department.getId();
+
+        //原先存在的权限项
+        DeptPerm deptPerm = new DeptPerm();
+        deptPerm.setDeptId(deptId);
+
+        List<Integer> permValueOld = new ArrayList<Integer>();
+        List<Integer> permValueIdOld = new ArrayList<Integer>();
+        ReturnData rdDeptPerm = deptPermService.selectByParam(null, deptPerm);
+        List<DeptPerm> dataDeptPerm = (List<DeptPerm>) rdDeptPerm.getData().get("data");
+        if (dataDeptPerm.size() > 0) {
+            for (int i = 0; i < dataDeptPerm.size(); i++) {
+                DeptPerm deptPermTemp = dataDeptPerm.get(i);
+                permValueOld.add(deptPermTemp.getPermId());
+                permValueIdOld.add(deptPermTemp.getId());
+            }
+        }
+
+        //新的权限项
+        List<Integer> permValueNew = new ArrayList<Integer>();
+
+        String permValue = request.getParameter("permValue");//2,3,4
+
+        //首先 - 新增设备的时候肯定是新增
+        String[] permValueArray = permValue.split(",");
+        for (int i = 0; i < permValueArray.length; i++) {
+            permValueNew.add(Integer.valueOf(permValueArray[i]));
+        }
+
+        //删除没有的
+        for (int i = 0; i < permValueOld.size(); i++) {
+            if (!permValueNew.contains(permValueOld.get(i))) {
+                DeptPerm deptPermTemp = new DeptPerm();
+                deptPermTemp.setId(permValueIdOld.get(i));
+                deptPermService.delete(deptPermTemp);
+            }
+        }
+
+        //新增新增的
+        for (int i = 0; i < permValueNew.size(); i++) {
+            if (!permValueOld.contains(permValueNew.get(i))) {
+                DeptPerm deptPermTemp = new DeptPerm();
+                deptPermTemp.setDeptId(deptId);
+                deptPermTemp.setPermId(permValueNew.get(i));
+                deptPermService.insert(deptPermTemp);
+            }
+        }
+
         return departmentService.update(department);//执行 Department  操作
     }
 

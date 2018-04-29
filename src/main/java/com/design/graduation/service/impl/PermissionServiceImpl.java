@@ -15,37 +15,34 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import com.design.graduation.dao.DepartmentMapper;
-import com.design.graduation.model.Department;
-import com.design.graduation.service.DepartmentService;
+import com.design.graduation.dao.PermissionMapper;
+import com.design.graduation.model.Permission;
+import com.design.graduation.service.PermissionService;
 import com.design.graduation.util.JqGridJsonBean;
 import com.design.graduation.util.ReturnData;
 
 /**
 * <p>服务层接口实现</p>
-* <p>Table: department - </p>
+* <p>Table: permission - </p>
 *
 * @since ${.now}
 */
 @Service
-public class DepartmentServiceImpl implements DepartmentService {
+public class PermissionServiceImpl implements PermissionService {
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     @Resource
-    private DepartmentMapper departmentMapper;
+    private PermissionMapper permissionMapper;
 
     /**
-     * 将 Department 插入到数据库中
+     * 将 Permission 插入到数据库中
      */
-    public ReturnData insert(Department department) {
+    public ReturnData insert(Permission permission) {
         // TODO Auto-generated method stub
         ReturnData rd = new ReturnData();
         try {
-            int deptId = departmentMapper.insert(department);
-            Map<String, Object> dataMap = new HashMap<String, Object>();
-            dataMap.put("data", deptId);
-            rd.setData(dataMap);
+            permissionMapper.insert(permission);
             rd.setCode("OK");
             rd.setMsg("数据插入成功 ");
         }
@@ -60,13 +57,13 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     /**
-     * 将 Department 中的参数 删除数据库中的数据
+     * 将 Permission 中的参数 删除数据库中的数据
      */
-    public ReturnData delete(Department department) {
+    public ReturnData delete(Permission permission) {
         // TODO Auto-generated method stub
         ReturnData rd = new ReturnData();
         try {
-            departmentMapper.delete(department);
+            permissionMapper.delete(permission);
             rd.setCode("OK");
             rd.setMsg("数据删除成功 ");
         }
@@ -80,12 +77,12 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     /**
-     * 将 Department 中的参数 批量删除数据库中的数据
+     * 将 Permission 中的参数 批量删除数据库中的数据
      */
     public ReturnData deleteBatch(String[] ids) {
         ReturnData rd = new ReturnData();
         try {
-            departmentMapper.deleteBatch(ids);
+            permissionMapper.deleteBatch(ids);
             rd.setCode("OK");
             rd.setMsg("数据删除成功 ");
         }
@@ -98,13 +95,13 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     /**
-     * 依据 Department 中的主键修改数据库中的数据
+     * 依据 Permission 中的主键修改数据库中的数据
      */
-    public ReturnData update(Department department) {
+    public ReturnData update(Permission permission) {
         // TODO Auto-generated method stub
         ReturnData rd = new ReturnData();
         try {
-            departmentMapper.update(department);
+            permissionMapper.update(permission);
             rd.setCode("OK");
             rd.setMsg("数据删除成功 ");
         }
@@ -118,9 +115,9 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     /**
-     * 执行 Department 的分页查询
+     * 执行 Permission 的分页查询
      */
-    public JqGridJsonBean select(String page, String rows, String order_by, Department department) {
+    public JqGridJsonBean select(String page, String rows, String order_by, Permission permission) {
         // TODO Auto-generated method stub
         JqGridJsonBean jgjb = new JqGridJsonBean();
         try {
@@ -134,11 +131,11 @@ public class DepartmentServiceImpl implements DepartmentService {
                 order_by = "id";
             }
 
-            //查询Department总数据量
-            int count = departmentMapper.selectCount(department);
+            //查询Permission总数据量
+            int count = permissionMapper.selectCount(permission);
             //根据查询条件查询总页数
             int pages = (count % Integer.parseInt(rows)) == 0 ? (count / _rows) : ((count / _rows) + 1);
-            List<Department> data = departmentMapper.selectData(department, _rows, (_page - 1) * _rows, order_by);
+            List<Permission> data = permissionMapper.selectData(permission, _rows, (_page - 1) * _rows, order_by);
             jgjb.setPage(_page);// 第几页
             jgjb.setRecords(count);// 总数据量
             jgjb.setTotal(pages);// 总页数
@@ -152,9 +149,44 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     /**
-     * 执行 Department 的查询不分页
+     * 执行 Permission 的分页查询 - 关联查询
      */
-    public ReturnData selectByParam(String order_by, Department department) {
+    public JqGridJsonBean selectRelationData(String page, String rows, String order_by, Permission permission) {
+        // TODO Auto-generated method stub
+        JqGridJsonBean jgjb = new JqGridJsonBean();
+        try {
+            int _page = Integer.parseInt(page);
+            int _rows = Integer.parseInt(rows);
+            //没有order_by 默认主键排序
+            if (order_by != null && !"".equals(order_by)) {
+                //不变
+            }
+            else {
+                order_by = "id";
+            }
+
+            //查询Permission总数据量
+            int count = permissionMapper.selectRelationCount(permission);
+            //根据查询条件查询总页数
+            int pages = (count % Integer.parseInt(rows)) == 0 ? (count / _rows) : ((count / _rows) + 1);
+            List<Map<String, Object>> data = permissionMapper.selectRelationData(permission, _rows, (_page - 1) * _rows,
+                    order_by);
+            jgjb.setPage(_page);// 第几页
+            jgjb.setRecords(count);// 总数据量
+            jgjb.setTotal(pages);// 总页数
+            jgjb.setRoot(data);// 查询数据信息
+        }
+        catch (Exception e) {
+            logger.error(e.getMessage());
+            //操作异常,返回错误信息
+        }
+        return jgjb;
+    }
+
+    /**
+     * 执行 Permission 的查询不分页
+     */
+    public ReturnData selectByParam(String order_by, Permission permission) {
         // TODO Auto-generated method stub
         ReturnData rd = new ReturnData();
         try {
@@ -166,7 +198,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                 order_by = "id";
             }
 
-            List<Department> data = departmentMapper.selectByParam(department, order_by);
+            List<Permission> data = permissionMapper.selectByParam(permission, order_by);
             Map<String, Object> dataMap = new HashMap<String, Object>();
             dataMap.put("data", data);
             rd.setCode("OK");
@@ -182,18 +214,37 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public ReturnData ajaxSelectDept() {
+    public ReturnData ajaxSelectPermListByUse() {
         ReturnData rd = new ReturnData();
         try {
-            List<Map<Integer, String>> data = departmentMapper.ajaxSelectDept();
+            List<Permission> data = permissionMapper.ajaxSelectPermListByUse();
             Map<String, Object> dataMap = new HashMap<String, Object>();
             dataMap.put("data", data);
             rd.setCode("OK");
             rd.setData(dataMap);
         }
         catch (Exception e) {
-            this.logger.error(e.getMessage());
+            logger.error(e.getMessage());
+            //操作异常,返回错误信息
+            rd.setCode("ERROR");
+            rd.setMsg(e.getMessage());
+        }
+        return rd;
+    }
 
+    @Override
+    public ReturnData selectByPermIds(String permIds) {
+        ReturnData rd = new ReturnData();
+        try {
+            List<Permission> data = permissionMapper.selectByPermIds(permIds);
+            Map<String, Object> dataMap = new HashMap<String, Object>();
+            dataMap.put("data", data);
+            rd.setCode("OK");
+            rd.setData(dataMap);
+        }
+        catch (Exception e) {
+            logger.error(e.getMessage());
+            //操作异常,返回错误信息
             rd.setCode("ERROR");
             rd.setMsg(e.getMessage());
         }
