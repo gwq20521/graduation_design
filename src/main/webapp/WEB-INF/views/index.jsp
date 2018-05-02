@@ -47,7 +47,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <div class="side-left">
         <ul class="nav nav-pills nav-stacked">
             <li role="presentation">
+            
+				<shiro:hasPermission name="menu01">
                 <a href="#ssztgl-menu" class="nav-header" data-toggle="collapse"><span class="glyphicon glyphicon-folder-open"></span><span>人事信息管理</span></a>
+				</shiro:hasPermission>
+                
                 <ul id="ssztgl-menu" class="nav nav-list collapse in">
 				
 				<shiro:hasPermission name="department_show">
@@ -57,7 +61,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<shiro:hasPermission name="jobpos_show">
                     <li><a onclick="jumpIframe('jobpos/show')"><span class="glyphicon glyphicon-menu-right"></span><span>职位信息管理</span></a></li>
 				</shiro:hasPermission>
-                    
+				
 				<shiro:hasPermission name="employee_show">
                 	<li><a onclick="jumpIframe('employee/show')"><span class="glyphicon glyphicon-menu-right"></span><span>用户信息管理</span></a></li>
 				</shiro:hasPermission>
@@ -69,7 +73,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 </ul>
             </li>
 			<li role="presentation">
+			
+				<shiro:hasPermission name="menu02">
 				<a href="#dsjfx-menu" class="nav-header" data-toggle="collapse"><span class="glyphicon glyphicon-menu-hamburger"></span>工作管理</a>
+				</shiro:hasPermission>
+				
                 <ul id="dsjfx-menu" class="nav nav-list collapse in">
 	                
 	                <!-- <li><a href="#hzsml-menu" class="nav-header" data-toggle="collapse"><span class="glyphicon glyphicon-triangle-right"></span><span>业务流程部署</span></a></li>
@@ -80,7 +88,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	                	<li><a onclick="jumpIframe('')"><span class="glyphicon glyphicon-menu-right"></span><span>工作审批流程</span></a></li>
 	                </ul> -->
 	                
+				<shiro:hasPermission name="menu0201">
 	                <li><a href="#hzsml-menu" class="nav-header" data-toggle="collapse"><span class="glyphicon glyphicon-triangle-right"></span><span>考勤管理</span></a></li>
+				</shiro:hasPermission>
+				
 	                <ul id="hzsml-menu" class="nav nav-list collapse in">
 	                
 					<shiro:hasPermission name="attendance_show">
@@ -104,7 +115,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				</shiro:hasPermission>
 					
                     
+				<shiro:hasPermission name="menu0203">
 	                <li><a href="#hzsml-menu" class="nav-header" data-toggle="collapse"><span class="glyphicon glyphicon-triangle-right"></span><span>业务流程管理</span></a></li>
+				</shiro:hasPermission>
+				
 	                <ul id="hzsml-menu" class="nav nav-list collapse in">
 	                
 					<shiro:hasPermission name="activiti_flow_showTask">

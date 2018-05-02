@@ -92,7 +92,7 @@ public class ActivitiFlowController {
         return "activiti_flow/showTask";
     }
 
-    @RequiresPermissions(value = "activiti_flow_handleTask")
+    //@RequiresPermissions(value = "activiti_flow_handleTask")
     @RequestMapping(value = "/handleTask", method = RequestMethod.GET)
     public String handleTask(Model model, HttpServletRequest request) {
         String taskId = request.getParameter("taskId");
@@ -115,7 +115,7 @@ public class ActivitiFlowController {
         return "activiti_flow/handleTask";
     }
 
-    @RequiresPermissions(value = "activiti_flow_finishTask")
+    //@RequiresPermissions(value = "activiti_flow_finishTask")
     @RequestMapping(value = "/finishTask", method = RequestMethod.GET)
     public String finishTask(Model model, HttpServletRequest request) {
         String taskId = request.getParameter("taskId");
@@ -140,7 +140,7 @@ public class ActivitiFlowController {
      * 数据新增页面
      * @return
      */
-    @RequiresPermissions(value = "activiti_flow_add")
+    //@RequiresPermissions(value = "activiti_flow_add")
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String add(Model model, HttpServletRequest request) {
         return "activiti_flow/add";
@@ -305,7 +305,7 @@ public class ActivitiFlowController {
     /**
      * 查看流程部署的流程图
      */
-    @RequiresPermissions(value = "activiti_flow_viewImage")
+    //@RequiresPermissions(value = "activiti_flow_viewImage")
     @RequestMapping(value = "/viewImage", method = RequestMethod.GET)
     public void viewImage(Model model, HttpServletRequest request, HttpServletResponse response) {
         String pdid = request.getParameter("pdid");
@@ -330,7 +330,7 @@ public class ActivitiFlowController {
     /**
      * 删除流程部署 - 被使用中的流程部署项，禁止删除
      */
-    @RequiresPermissions(value = "activiti_flow_delDeployment")
+    //@RequiresPermissions(value = "activiti_flow_delDeployment")
     @RequestMapping(value = "/delDeployment")
     @ResponseBody
     public ReturnData delDeployment(Model model, HttpServletRequest request) {
@@ -346,7 +346,7 @@ public class ActivitiFlowController {
     /**
      * 提交审批任务
      */
-    @RequiresPermissions(value = "activiti_flow_commitAttdApprove")
+    //@RequiresPermissions(value = "activiti_flow_commitAttdApprove")
     @RequestMapping(value = "/commitAttdApprove")
     @ResponseBody
     public ReturnData commitAttdApprove(Model model, HttpServletRequest request) {
@@ -385,7 +385,7 @@ public class ActivitiFlowController {
     /**
      * 任务分配
      */
-    @RequiresPermissions(value = "activiti_flow_commitJobsManage")
+    //@RequiresPermissions(value = "activiti_flow_commitJobsManage")
     @RequestMapping(value = "/commitJobsManage")
     @ResponseBody
     public ReturnData commitJobsManage(Model model, HttpServletRequest request) {
@@ -484,7 +484,7 @@ public class ActivitiFlowController {
     /**
      * 查看流程部署的流程图
      */
-    @RequiresPermissions(value = "activiti_flow_viewCurrentImage")
+    //@RequiresPermissions(value = "activiti_flow_viewCurrentImage")
     @RequestMapping(value = "/viewCurrentImage", method = RequestMethod.GET)
     public String viewCurrentImage(Model model, HttpServletRequest request, HttpServletResponse response) {
         String taskId = request.getParameter("taskId");

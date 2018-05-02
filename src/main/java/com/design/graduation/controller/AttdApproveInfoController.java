@@ -79,7 +79,7 @@ public class AttdApproveInfoController {
      * 数据新增页面
      * @return
      */
-    @RequiresPermissions(value = "attd_approve_info_add")
+    //@RequiresPermissions(value = "attd_approve_info_add")
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String add(Model model, HttpServletRequest request) {
         String approve_type = request.getParameter("approve_type");
@@ -91,7 +91,7 @@ public class AttdApproveInfoController {
      * 数据修改页面
      * @return
      */
-    @RequiresPermissions(value = "attd_approve_info_edit")
+    //@RequiresPermissions(value = "attd_approve_info_edit")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String edit(Model model, HttpServletRequest request) {
         String id = request.getParameter("id");

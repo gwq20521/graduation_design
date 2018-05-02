@@ -63,7 +63,7 @@ public class EmpFriendInfoController {
      * 数据展示页面
      * @return
      */
-    @RequiresPermissions(value = "emp_friend_info_show")
+    //@RequiresPermissions(value = "emp_friend_info_show")
     @RequestMapping(value = "/show", method = RequestMethod.GET)
     public String show(Model model, HttpServletRequest request) {
         return "emp_friend_info/show";
@@ -73,7 +73,7 @@ public class EmpFriendInfoController {
      * 数据新增页面
      * @return
      */
-    @RequiresPermissions(value = "emp_friend_info_add")
+    //@RequiresPermissions(value = "emp_friend_info_add")
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String add(Model model, HttpServletRequest request) {
         return "emp_friend_info/add";
@@ -83,7 +83,7 @@ public class EmpFriendInfoController {
      * 数据修改页面
      * @return
      */
-    @RequiresPermissions(value = "emp_friend_info_edit")
+    //@RequiresPermissions(value = "emp_friend_info_edit")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String edit(Model model, HttpServletRequest request) {
         String id = request.getParameter("id");

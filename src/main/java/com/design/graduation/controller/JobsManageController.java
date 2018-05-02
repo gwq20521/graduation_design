@@ -81,7 +81,7 @@ public class JobsManageController {
      * 数据新增页面
      * @return
      */
-    @RequiresPermissions(value = "jobs_manage_add")
+    //@RequiresPermissions(value = "jobs_manage_add")
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String add(Model model, HttpServletRequest request) {
         return "jobs_manage/add";
@@ -91,7 +91,7 @@ public class JobsManageController {
      * 数据修改页面
      * @return
      */
-    @RequiresPermissions(value = "jobs_manage_edit")
+    //@RequiresPermissions(value = "jobs_manage_edit")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String edit(Model model, HttpServletRequest request) {
         String id = request.getParameter("id");

@@ -69,4 +69,6 @@ public interface JobposService {
 
     int selectDeptIdById(Integer jobposId);
 
+    String selectCodeById(int jobposId);
+
 }

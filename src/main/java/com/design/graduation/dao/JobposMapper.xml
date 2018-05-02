@@ -247,5 +247,10 @@
     	WHERE id = ${jobposId};
     </select>
     
+    <select id="selectCodeById" resultType="java.lang.String">
+    	select jobpos_code from jobpos 
+    	WHERE id = ${jobposId};
+    </select>
+    
     
 </mapper>

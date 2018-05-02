@@ -144,7 +144,7 @@ public class RestController {
      * 数据测试页面
      * @return
      */
-    @RequiresPermissions(value = "test")
+    //@RequiresPermissions(value = "test")
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public String show(Model model, HttpServletRequest request) {
         return "test/admin";

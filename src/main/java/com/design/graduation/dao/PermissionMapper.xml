@@ -257,7 +257,7 @@
             </trim>
             </where>
         </if>
-        order by ${order_by} desc
+        order by ${order_by} asc
     </select>
     
 	<select id="ajaxSelectPermListByUse" resultMap="BaseResultMap">

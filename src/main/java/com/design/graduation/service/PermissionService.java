@@ -6,7 +6,10 @@
  */
 package com.design.graduation.service;
 
+import java.util.List;
+
 import com.design.graduation.model.Permission;
+import com.design.graduation.model.XtreeData;
 import com.design.graduation.util.JqGridJsonBean;
 import com.design.graduation.util.ReturnData;
 
@@ -71,5 +74,9 @@ public interface PermissionService {
     ReturnData ajaxSelectPermListByUse();
 
     ReturnData selectByPermIds(String permIds);
+
+    List<XtreeData> selXtreeData();
+
+    List<XtreeData> selXtreeData(List<Integer> permValue);
 
 }

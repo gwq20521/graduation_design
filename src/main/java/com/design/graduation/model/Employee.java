@@ -6,6 +6,7 @@
  */
 package com.design.graduation.model;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
 
@@ -18,7 +19,14 @@ import org.apache.ibatis.type.Alias;
  * @since ${.now}
  */
 @Alias("Employee")
-public class Employee {
+public class Employee implements Serializable {
+
+    /**
+     * @description: TODO - 
+     * @author: 郭伟强   E-mail:gwq20521@163.com
+     * @createTime: 2018年4月29日 下午8:04:43
+     */
+    private static final long serialVersionUID = -4700578691030494236L;
 
     /** 主键 */
     private Integer id;

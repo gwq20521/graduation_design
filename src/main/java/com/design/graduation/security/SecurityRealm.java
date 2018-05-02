@@ -123,7 +123,9 @@ public class SecurityRealm extends AuthorizingRealm {
 
         Employee currentEmp = (Employee) subject.getSession().getAttribute("current_emp");
 
-        int deptId = jobposService.selectDeptIdById(currentEmp.getJobposId());
+        int jobposId = currentEmp.getJobposId();
+
+        int deptId = jobposService.selectDeptIdById(jobposId);
 
         DeptPerm deptPerm = new DeptPerm();
         deptPerm.setDeptId(deptId);
@@ -139,11 +141,24 @@ public class SecurityRealm extends AuthorizingRealm {
         if (permIdList.size() > 0) {
             String permIdStr = permIdList.toString();
             permIdStr = permIdStr.substring(1, permIdStr.length() - 1);
+
             ReturnData rdPermission = permissionService.selectByPermIds(permIdStr);
             List<Permission> permList = (List<Permission>) rdPermission.getData().get("data");
 
             for (int i = 0; i < permList.size(); i++) {
-                authorizationInfo.addStringPermission(permList.get(i).getPercode());
+                String percode = permList.get(i).getPercode();
+                //System.out.println(percode);
+
+                //只有部门经理以上的级别的职位拥有任务分配的权限 - 10  任务分配    1   jobs_manage_show    jobs_manage/show    6   1
+                if ("jobs_manage_show".equals(percode)) {
+                    String jobposCode = jobposService.selectCodeById(jobposId);
+                    if (jobposCode.length() <= 6) {
+                        authorizationInfo.addStringPermission(percode);
+                    }
+                }
+                else {
+                    authorizationInfo.addStringPermission(percode);
+                }
             }
         }
 

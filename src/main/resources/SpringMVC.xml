@@ -15,11 +15,6 @@
                         http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
                         http://www.springframework.org/schema/tx 
                         http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
-    <!-- shiro权限拦截不起作用 添加这两个配置 
-    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor"/>
-    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
-     <property name="securityManager" ref="securityManager"/>
-    </bean>-->
     
     <!-- 默认的注解映射支持 -->
     <mvc:annotation-driven/>
@@ -39,6 +34,16 @@
     
     <!-- 配置使Spring采用CGLIB代理 -->
     <aop:aspectj-autoproxy proxy-target-class="true"/>
+    
+	<!-- 开启aop，对类代理 -->
+	<!-- <aop:config proxy-target-class="true"></aop:config>
+	
+    shiro权限拦截不起作用 添加这两个配置 
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor"/> -->
+    
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+     <property name="securityManager" ref="securityManager"/>
+    </bean>
     
     <!-- 支持返回json(避免IE在ajax请求时，返回json出现下载 ) -->
     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">

@@ -7,6 +7,7 @@
 package com.design.graduation.controller;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -22,7 +23,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,8 +33,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSON;
+import com.design.graduation.model.DeptPerm;
 import com.design.graduation.model.Employee;
 import com.design.graduation.model.Permission;
+import com.design.graduation.model.XtreeData;
+import com.design.graduation.service.DeptPermService;
 import com.design.graduation.service.PermissionService;
 import com.design.graduation.util.JqGridJsonBean;
 import com.design.graduation.util.ReturnData;
@@ -60,11 +63,14 @@ public class PermissionController {
     @Resource
     private PermissionService permissionService;
 
+    @Resource
+    private DeptPermService deptPermService;
+
     /**
      * 数据展示页面
      * @return
      */
-    @RequiresPermissions(value = "permission_show")
+    //@RequiresPermissions(value = "permission_show")
     @RequestMapping(value = "/show", method = RequestMethod.GET)
     public String show(Model model, HttpServletRequest request) {
         return "permission/show";
@@ -74,7 +80,7 @@ public class PermissionController {
      * 数据新增页面
      * @return
      */
-    @RequiresPermissions(value = "permission_add")
+    //@RequiresPermissions(value = "permission_add")
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String add(Model model, HttpServletRequest request) {
         return "permission/add";
@@ -84,7 +90,7 @@ public class PermissionController {
      * 数据修改页面
      * @return
      */
-    @RequiresPermissions(value = "permission_edit")
+    //@RequiresPermissions(value = "permission_edit")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String edit(Model model, HttpServletRequest request) {
         String id = request.getParameter("id");
@@ -338,6 +344,51 @@ public class PermissionController {
     @ResponseBody
     public ReturnData ajaxSelectMaxEmpCode(HttpServletRequest request) {
         return permissionService.ajaxSelectPermListByUse();
+    }
+
+    /**
+     * 得到指定角色权限树
+     * @param roleId
+     * @param roleName
+     * @return
+     */
+    @RequestMapping("/xtreedata")
+    @ResponseBody
+    /*public JSONArray xtreeData() {
+        List<XtreeData> xtreeDataList = permissionService.selXtreeData();
+        JSONArray xtreeDataArray = JSONArray.parseArray(JSON.toJSONString(xtreeDataList));
+        return xtreeDataArray;
+    }*/
+    public List<XtreeData> xtreeData() {
+        return permissionService.selXtreeData();
+    }
+
+    /**
+     * 得到指定角色权限树
+     * @param roleId
+     * @param roleName
+     * @return
+     */
+    @RequestMapping("/ajaxSelectPermListByUseXtreeData")
+    @ResponseBody
+    public List<XtreeData> ajaxSelectPermListByUseXtreeData(HttpServletRequest request) {
+        String deptId = request.getParameter("deptId");
+        int deptIdI = Integer.valueOf(deptId);
+
+        //获取权限信息
+        DeptPerm deptPerm = new DeptPerm();
+        deptPerm.setDeptId(deptIdI);
+
+        List<Integer> permValue = new ArrayList<Integer>();
+        ReturnData rdDeptPerm = deptPermService.selectByParam(null, deptPerm);
+        List<DeptPerm> dataDeptPerm = (List<DeptPerm>) rdDeptPerm.getData().get("data");
+        if (dataDeptPerm.size() > 0) {
+            for (int i = 0; i < dataDeptPerm.size(); i++) {
+                permValue.add(dataDeptPerm.get(i).getPermId());
+            }
+        }
+
+        return permissionService.selXtreeData(permValue);
     }
 
 }

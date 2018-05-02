@@ -17,11 +17,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     
     <link rel="stylesheet" href="<%=path %>/assets/css/common.css">
     
+	<link rel="stylesheet" href="<%=path %>/assets/js/layui/css/layui.css" /><!-- media="all"  -->
+	
     <script type="text/javascript" src="<%=path %>/assets/js/jquery/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="<%=path %>/assets/js/jquery/jquery.pagination.js"></script>
     <script type="text/javascript" src="<%=path %>/assets/js/bootstrap/bootstrap.min.js"></script>
 	
     <script type="text/javascript" src="<%=path %>/assets/js/layer/laydate.js"></script>
+	
+    <script src="<%=path %>/assets/js/user_common.js"></script>
+    
+	<script type="text/javascript" src="<%=path %>/assets/js/layui/layui.js"></script>
+	<script type="text/javascript" src="<%=path %>/assets/js/layui/layui-xtree.js"></script>
 	
     <style type="text/css">
 		.amap-sug-result{
@@ -46,9 +53,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script type="text/javascript">
 		var olddata = JSON.parse('${olddata}');
 		
-		var permValue = '${permValue}';
+		/* var permValue = '${permValue}';
 
-		var permValueArray = permValue.split(",");
+		var permValueArray = permValue.split(","); */
 	</script>
 
 </head>
@@ -135,9 +142,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<div class="col-xs-6 row ie-col-6">
                     <span class="col-xs-3 glyphicon">* 权限
                     </span>
-                    <div class="col-xs-9 pad-0 row" id="permDivId">
+                    <!-- <div class="col-xs-9 pad-0 row" id="permDivId">
                         
+                    </div> -->
+                    
+					<div class="layui-form" style="width:80%;"><!--  -->
+                    <!-- <label class="layui-form-label">分配权限：</label> -->
+					<!--权限树xtree  -->
+					<div class="layui-form-item">
+					
+	                    <div id="permDivId" style="width:250px;margin-left: 100px"><!-- class="col-xs-9 pad-0 row" -->
+	                        
+	                    </div>
+                    
+			      	</div>
                     </div>
+			      	
                 </div>
         	 	
                 
@@ -151,17 +171,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <script type="text/javascript">
 
 $(function(){
-	function isInArray(arr,value){
-	    for(var i = 0; i < arr.length; i++){
-	        if(value == arr[i]){
-	            return true;
-	        }
-	    }
-	    return false;
-	}
-	
 	/* 获取到权限信息 */
-	$.ajax({
+	<%-- $.ajax({
 		url:'<%=path %>/permission/ajaxSelectPermListByUse',
    		type:'post',
        	success:function(data){
@@ -184,86 +195,117 @@ $(function(){
        	error:function() {
        		alert("异常！");
        	}
-    });
+    }); --%>
+
+
+    var deptId = olddata.id;
+    
+    var xtree;
+    layui.config({
+    	base : "js/"
+    }).use(['form','layer','jquery'],function(){
+    	var form = layui.form,
+    		
+    	layer = parent.layer === undefined ? layui.layer : parent.layer,
+   		laypage = layui.laypage;
+    	
+   		xtree = new layuiXtree({
+   		      elem: 'permDivId'  //(必填) 放置xtree的容器id，不带#号
+   		      , form: form    //(必填) layui 的 form
+   		      , data: '<%=path %>/permission/ajaxSelectPermListByUseXtreeData?deptId='+deptId  //(必填) 数据接口，需要返回指定结构json字符串
+   		      , ckall: true   //启动全选功能，默认false
+   		      , ckallback: function () {}//全选框状态改变后执行的回调函数
+   		      
+   		      , isopen: true  //加载完毕后的展开状态，默认值：true
+   		      
+   		});
+    })
+
+    var permValue =[]; 
+
+    function getPermValue(){ //jquery获取复选框值 
+    	permValue =[]; 
+    	
+    	var list=xtree.GetChecked();
+        
+    	for(var i=0;i<list.length;i++){
+    		var cheInVal = list[i].value;
+    		permValue.push(cheInVal);
+    		
+    		if(xtree.GetParent(cheInVal)!=null){
+    			var cheInVal1 = xtree.GetParent(cheInVal).value;
+    			if (!isInArray(permValue, cheInVal1)) {
+    				permValue.push(cheInVal1);
+				}
+
+    			if(xtree.GetParent(cheInVal1)!=null){
+    				var cheInVal2 = xtree.GetParent(cheInVal1).value;
+	    			if (!isInArray(permValue, cheInVal2)) {
+	    				permValue.push(cheInVal2);
+	    			}
+    			}
+    		}
+    	}
+        //alert(permValue);//1,2,3,4
+    }
+
+    var departmentParam = {};
+    	departmentParam.id;
+    	departmentParam.deptCode;
+    	departmentParam.deptname;
+    	departmentParam.deptinfo;
+    	departmentParam.isDis;
+
+    	$("#id").val(deptId);
+    	$("#deptCode").val(olddata.deptCode);
+    	$("#deptname").val(olddata.deptname);
+    	$("#deptinfo").val(olddata.deptinfo);
+    	
+    	if (olddata.isDis == 1) {
+    		$("#isDisId").attr("checked","checked");
+    	} else {
+    		$("#isDisNotId").attr("checked","checked");
+    	}
+    	
+    	$("#save").click(function(){
+    		var param = JSON.parse(JSON.stringify(departmentParam));
+    		
+    					param.id=$("#id").val();
+    					param.deptCode=$("#deptCode").val();
+    					param.deptname=$("#deptname").val();
+    					param.deptinfo=$("#deptinfo").val();
+
+    					var isDis = $("input[name='isDisName']:checked").val();
+
+    					param.isDis=isDis;
+
+    					getPermValue();
+    					
+    	    $.ajax({url:'<%=path %>/department/update',
+           		type:'post',
+           		cache:false,
+           		dataType:'json',
+           		data: {GridParam:JSON.stringify(param),
+           			permValue:permValue+""},
+               	success:function(data){
+               		if(data.code == "OK"){
+               			alert("数据修改成功");
+                   		window.location.href= "<%=path %>/department/show";
+               		} else {
+               			alert(data.msg);
+               		}
+               	},
+               	error : function() {
+               		alert("异常！");
+               	}
+           });
+    	});
+    	
+   	$("#back").click(function(){
+   		window.location.href= "<%=path %>/department/show";
+   	});
 
 });
-
-var permValue =[]; 
-
-function getPermValue(){ //jquery获取复选框值 
-	permValue =[]; 
-	$('input[name="permName"]:checked').each(function(){ 
-		permValue.push($(this).val()); 
-	}); 
-
-	//alert(permValue.length==0 ?'你还没有选择任何内容！':permValue);//2,3,4
-}
-
-var departmentParam = {};
-	departmentParam.id;
-	departmentParam.deptCode;
-	departmentParam.deptname;
-	departmentParam.deptinfo;
-	departmentParam.isDis;
-
-	$("#id").val(olddata.id);
-	$("#deptCode").val(olddata.deptCode);
-	$("#deptname").val(olddata.deptname);
-	$("#deptinfo").val(olddata.deptinfo);
-	
-	//$("#isDis").val(olddata.isDis);
-	//是否可分配的数据的回显
-	
-	if (olddata.isDis == 1) {
-		$("#isDisId").attr("checked","checked");
-	} else {
-		$("#isDisNotId").attr("checked","checked");
-	}
-	
-	/* if (olddata.cameraTypeId == cameraTypeIdTemp) {
-		_html += "<option value='"+cameraTypeIdTemp+"' selected>"+list[i].camera_type_name+"</option>";
-	} else {
-		$("input[name='isDisName']:checked").val(olddata.isDis);
-		_html += "<option value='"+cameraTypeIdTemp+"'>"+list[i].camera_type_name+"</option>";
-	} */
-	
-	$("#save").click(function(){
-		var param = JSON.parse(JSON.stringify(departmentParam));
-		
-					param.id=$("#id").val();
-					param.deptCode=$("#deptCode").val();
-					param.deptname=$("#deptname").val();
-					param.deptinfo=$("#deptinfo").val();
-
-					var isDis = $("input[name='isDisName']:checked").val();
-
-					param.isDis=isDis;
-
-					getPermValue();
-					
-	    $.ajax({url:'<%=path %>/department/update',
-       		type:'post',
-       		cache:false,
-       		dataType:'json',
-       		data: {GridParam:JSON.stringify(param),
-       			permValue:permValue+""},
-           	success:function(data){
-           		if(data.code == "OK"){
-           			alert("数据修改成功");
-               		window.location.href= "<%=path %>/department/show";
-           		} else {
-           			alert(data.msg);
-           		}
-           	},
-           	error : function() {
-           		alert("异常！");
-           	}
-       });
-	});
-	
-	$("#back").click(function(){
-		window.location.href= "<%=path %>/department/show";
-	});
 
 </script>
 </html>

@@ -79,7 +79,7 @@ public class DepartmentController {
      * 数据新增页面
      * @return
      */
-    @RequiresPermissions(value = "department_add")
+    //@RequiresPermissions(value = "department_add")
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String add(Model model, HttpServletRequest request) {
         return "department/add";
@@ -89,7 +89,7 @@ public class DepartmentController {
      * 数据修改页面
      * @return
      */
-    @RequiresPermissions(value = "department_edit")
+    //@RequiresPermissions(value = "department_edit")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String edit(Model model, HttpServletRequest request) {
         String id = request.getParameter("id");
@@ -106,9 +106,9 @@ public class DepartmentController {
         }
 
         //获取权限信息
-        DeptPerm deptPerm = new DeptPerm();
+        /*DeptPerm deptPerm = new DeptPerm();
         deptPerm.setDeptId(deptId);
-
+        
         List<Integer> permValue = new ArrayList<Integer>();
         ReturnData rdDeptPerm = deptPermService.selectByParam(null, deptPerm);
         List<DeptPerm> dataDeptPerm = (List<DeptPerm>) rdDeptPerm.getData().get("data");
@@ -117,14 +117,14 @@ public class DepartmentController {
                 permValue.add(dataDeptPerm.get(i).getPermId());
             }
         }
-
+        
         String permValueStr = permValue.toString();
-
+        
         if (permValue.size() > 0) {
             permValueStr = permValueStr.substring(1, permValueStr.length() - 1);
         }
-
-        model.addAttribute("permValue", permValueStr);
+        
+        model.addAttribute("permValue", permValueStr);*/
 
         return "department/edit";
     }

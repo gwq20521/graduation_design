@@ -26,3 +26,15 @@ function getFormatDateNohms(value){
 	var dd = d<10?("0"+d):d;
 	return date.getFullYear()+"-"+MM+"-"+dd;
 }
+
+
+function isInArray(arr,value){
+    for(var i = 0; i < arr.length; i++){
+        if(value == arr[i]){
+            return true;
+        }
+    }
+    return false;
+}
+
+
