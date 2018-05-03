@@ -22,6 +22,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <script src="<%=path %>/assets/js/html5shiv.min.js"></script>
     <script src="<%=path %>/assets/js/respond.min.js"></script>
     <![endif]-->
+    
+	<style type="text/css">
+		
+    #hzsml-menu1 .glyphicon{
+		margin-left:35px !important;
+	}
+		
+    #hzsml-menu2 .glyphicon{
+		margin-left:35px !important;
+	}
+	
+	</style>
+	
 </head>
 <body>
 <!--头部导航栏信息-->
@@ -89,10 +102,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	                </ul> -->
 	                
 				<shiro:hasPermission name="menu0201">
-	                <li><a href="#hzsml-menu" class="nav-header" data-toggle="collapse"><span class="glyphicon glyphicon-triangle-right"></span><span>考勤管理</span></a></li>
+	                <li><a href="#hzsml-menu1" class="nav-header" data-toggle="collapse"><span class="glyphicon glyphicon-triangle-right"></span><span>考勤管理</span></a></li>
 				</shiro:hasPermission>
 				
-	                <ul id="hzsml-menu" class="nav nav-list collapse in">
+	                <ul id="hzsml-menu1" class="nav nav-list collapse in">
 	                
 					<shiro:hasPermission name="attendance_show">
 	                	<li><a onclick="jumpIframe('attendance/show')"><span class="glyphicon glyphicon-menu-right"></span><span>考勤数据</span></a></li>
@@ -116,10 +129,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					
                     
 				<shiro:hasPermission name="menu0203">
-	                <li><a href="#hzsml-menu" class="nav-header" data-toggle="collapse"><span class="glyphicon glyphicon-triangle-right"></span><span>业务流程管理</span></a></li>
+	                <li><a href="#hzsml-menu2" class="nav-header" data-toggle="collapse"><span class="glyphicon glyphicon-triangle-right"></span><span>业务流程管理</span></a></li>
 				</shiro:hasPermission>
 				
-	                <ul id="hzsml-menu" class="nav nav-list collapse in">
+	                <ul id="hzsml-menu2" class="nav nav-list collapse in">
 	                
 					<shiro:hasPermission name="activiti_flow_showTask">
 	                	<li><a onclick="jumpIframe('activiti_flow/showTask')"><span class="glyphicon glyphicon-menu-right"></span><span>任务执行</span></a></li>

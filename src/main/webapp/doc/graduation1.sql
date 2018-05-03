@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50627
 File Encoding         : 65001
 
-Date: 2018-05-02 12:12:57
+Date: 2018-05-03 18:10:12
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -81,7 +81,7 @@ CREATE TABLE `act_ge_property` (
 -- ----------------------------
 -- Records of act_ge_property
 -- ----------------------------
-INSERT INTO `act_ge_property` VALUES ('next.dbid', '65001', '27');
+INSERT INTO `act_ge_property` VALUES ('next.dbid', '67501', '28');
 INSERT INTO `act_ge_property` VALUES ('schema.history', 'create(5.22.0.0)', '1');
 INSERT INTO `act_ge_property` VALUES ('schema.version', '5.22.0.0', '1');
 
@@ -122,6 +122,9 @@ INSERT INTO `act_hi_actinst` VALUES ('55003', 'ExchangeHoliday:1:52504', '52505'
 INSERT INTO `act_hi_actinst` VALUES ('60012', 'PublishTask:1:60010', '60011', '60011', 'startevent1', null, null, 'Start', 'startEvent', null, '2018-04-24 23:04:37.459', '2018-04-24 23:04:37.460', '1', '');
 INSERT INTO `act_hi_actinst` VALUES ('60014', 'PublishTask:1:60010', '60011', '60011', 'usertask1', '60015', null, '完成任务【部门职员】', 'userTask', '222', '2018-04-24 23:04:37.460', '2018-04-24 23:24:50.806', '1213346', '');
 INSERT INTO `act_hi_actinst` VALUES ('62501', 'PublishTask:1:60010', '60011', '60011', 'endevent1', null, null, 'End', 'endEvent', null, '2018-04-24 23:24:50.986', '2018-04-24 23:24:50.987', '1', '');
+INSERT INTO `act_hi_actinst` VALUES ('65002', 'AskForLeave:1:52517', '65001', '65001', 'startevent1', null, null, 'Start', 'startEvent', null, '2018-05-03 15:52:27.752', '2018-05-03 15:52:27.809', '57', '');
+INSERT INTO `act_hi_actinst` VALUES ('65004', 'AskForLeave:1:52517', '65001', '65001', 'usertask1', '65005', null, '审批【部门经理】', 'userTask', 'test2', '2018-05-03 15:52:27.809', '2018-05-03 15:52:43.774', '15965', '');
+INSERT INTO `act_hi_actinst` VALUES ('65007', 'AskForLeave:1:52517', '65001', '65001', 'usertask2', '65008', null, '审批【技术总监/总经理】', 'userTask', 'guo', '2018-05-03 15:52:43.774', null, null, '');
 
 -- ----------------------------
 -- Table structure for act_hi_attachment
@@ -222,6 +225,8 @@ CREATE TABLE `act_hi_identitylink` (
 INSERT INTO `act_hi_identitylink` VALUES ('52510', null, 'participant', '111', null, '52505');
 INSERT INTO `act_hi_identitylink` VALUES ('52513', null, 'participant', '333', null, '52505');
 INSERT INTO `act_hi_identitylink` VALUES ('60016', null, 'participant', '222', null, '60011');
+INSERT INTO `act_hi_identitylink` VALUES ('65006', null, 'participant', 'test2', null, '65001');
+INSERT INTO `act_hi_identitylink` VALUES ('65009', null, 'participant', 'guo', null, '65001');
 
 -- ----------------------------
 -- Table structure for act_hi_procinst
@@ -253,6 +258,7 @@ CREATE TABLE `act_hi_procinst` (
 -- ----------------------------
 INSERT INTO `act_hi_procinst` VALUES ('52505', '52505', '10', 'ExchangeHoliday:1:52504', '2018-04-24 17:42:43.574', '2018-04-24 21:02:00.116', '11956542', null, 'startevent1', 'endevent1', null, null, '', null);
 INSERT INTO `act_hi_procinst` VALUES ('60011', '60011', '3', 'PublishTask:1:60010', '2018-04-24 23:04:37.459', '2018-04-24 23:24:50.996', '1213537', null, 'startevent1', 'endevent1', null, null, '', null);
+INSERT INTO `act_hi_procinst` VALUES ('65001', '65001', '11', 'AskForLeave:1:52517', '2018-05-03 15:52:27.751', null, null, null, 'startevent1', null, null, null, '', null);
 
 -- ----------------------------
 -- Table structure for act_hi_taskinst
@@ -289,6 +295,8 @@ CREATE TABLE `act_hi_taskinst` (
 INSERT INTO `act_hi_taskinst` VALUES ('52509', 'ExchangeHoliday:1:52504', 'usertask1', '52505', '52505', '审批【部门经理】', null, null, null, '111', '2018-04-24 17:42:43.579', null, '2018-04-24 17:43:08.279', '24700', 'completed', '50', null, null, null, '');
 INSERT INTO `act_hi_taskinst` VALUES ('52512', 'ExchangeHoliday:1:52504', 'usertask2', '52505', '52505', '审批【技术总监/总经理】', null, null, null, '333', '2018-04-24 17:43:08.285', null, '2018-04-24 21:02:00.086', '11931801', 'completed', '50', null, null, null, '');
 INSERT INTO `act_hi_taskinst` VALUES ('60015', 'PublishTask:1:60010', 'usertask1', '60011', '60011', '完成任务【部门职员】', null, null, null, '222', '2018-04-24 23:04:37.462', null, '2018-04-24 23:24:50.726', '1213264', 'completed', '50', null, null, null, '');
+INSERT INTO `act_hi_taskinst` VALUES ('65005', 'AskForLeave:1:52517', 'usertask1', '65001', '65001', '审批【部门经理】', null, null, null, 'test2', '2018-05-03 15:52:27.841', null, '2018-05-03 15:52:43.747', '15906', 'completed', '50', null, null, null, '');
+INSERT INTO `act_hi_taskinst` VALUES ('65008', 'AskForLeave:1:52517', 'usertask2', '65001', '65001', '审批【技术总监/总经理】', null, null, null, 'guo', '2018-05-03 15:52:43.774', null, null, null, null, '50', null, null, null, '');
 
 -- ----------------------------
 -- Table structure for act_hi_varinst
@@ -321,6 +329,7 @@ CREATE TABLE `act_hi_varinst` (
 INSERT INTO `act_hi_varinst` VALUES ('52507', '52505', '52505', null, 'empId', 'string', '1', null, null, null, '222', null, '2018-04-24 17:42:43.574', '2018-04-24 21:02:00.119');
 INSERT INTO `act_hi_varinst` VALUES ('55001', '52505', '52505', null, 'days', 'double', '0', null, '1', null, null, null, '2018-04-24 21:02:00.077', '2018-04-24 21:02:00.119');
 INSERT INTO `act_hi_varinst` VALUES ('60013', '60011', '60011', null, 'empId', 'string', '1', null, null, null, '222', null, '2018-04-24 23:04:37.459', '2018-04-24 23:24:51.017');
+INSERT INTO `act_hi_varinst` VALUES ('65003', '65001', '65001', null, 'empId', 'string', '0', null, null, null, 'test1', null, '2018-05-03 15:52:27.752', '2018-05-03 15:52:27.752');
 
 -- ----------------------------
 -- Table structure for act_id_group
@@ -561,6 +570,7 @@ CREATE TABLE `act_ru_execution` (
 -- ----------------------------
 -- Records of act_ru_execution
 -- ----------------------------
+INSERT INTO `act_ru_execution` VALUES ('65001', '2', '65001', '11', null, 'AskForLeave:1:52517', null, 'usertask2', '1', '0', '1', '0', '1', '2', '', null, null);
 
 -- ----------------------------
 -- Table structure for act_ru_identitylink
@@ -589,6 +599,8 @@ CREATE TABLE `act_ru_identitylink` (
 -- ----------------------------
 -- Records of act_ru_identitylink
 -- ----------------------------
+INSERT INTO `act_ru_identitylink` VALUES ('65006', '1', null, 'participant', 'test2', null, '65001', null);
+INSERT INTO `act_ru_identitylink` VALUES ('65009', '1', null, 'participant', 'guo', null, '65001', null);
 
 -- ----------------------------
 -- Table structure for act_ru_job
@@ -658,6 +670,7 @@ CREATE TABLE `act_ru_task` (
 -- ----------------------------
 -- Records of act_ru_task
 -- ----------------------------
+INSERT INTO `act_ru_task` VALUES ('65008', '1', '65001', '65001', 'AskForLeave:1:52517', '审批【技术总监/总经理】', null, null, 'usertask2', null, 'guo', null, '50', '2018-05-03 15:52:43.774', null, null, '1', '', null);
 
 -- ----------------------------
 -- Table structure for act_ru_variable
@@ -689,6 +702,7 @@ CREATE TABLE `act_ru_variable` (
 -- ----------------------------
 -- Records of act_ru_variable
 -- ----------------------------
+INSERT INTO `act_ru_variable` VALUES ('65003', '1', 'string', 'empId', '65001', '65001', null, null, null, null, 'test1', null);
 
 -- ----------------------------
 -- Table structure for attd_approve_info
@@ -707,7 +721,7 @@ CREATE TABLE `attd_approve_info` (
   `approve_state` int(11) NOT NULL COMMENT '审批状态 0-等待提交 1-开始审批 2-审批中 3-审批通过 4-审批驳回',
   `update_time` datetime NOT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of attd_approve_info
@@ -717,6 +731,7 @@ INSERT INTO `attd_approve_info` VALUES ('6', '10', '1.00', '11', '222', '1', '20
 INSERT INTO `attd_approve_info` VALUES ('7', '10', '3.00', '2323', '3232', '1', '2018-04-21 00:00:00', '2018-04-23 00:00:00', '2018-04-20 13:31:16', '3', '2018-04-20 13:31:16');
 INSERT INTO `attd_approve_info` VALUES ('9', '12', '2.00', '2', '22', '1', '2018-04-23 00:00:00', '2018-04-24 00:00:00', '2018-04-23 16:43:33', '1', '2018-04-23 16:43:33');
 INSERT INTO `attd_approve_info` VALUES ('10', '12', '1.00', '1', '1', '2', '2018-04-24 00:00:00', '2018-04-24 00:00:00', '2018-04-24 17:42:25', '3', '2018-04-24 17:42:25');
+INSERT INTO `attd_approve_info` VALUES ('11', '2', '1.00', '1', '1', '1', '2018-05-03 00:00:00', '2018-05-04 00:00:00', '2018-05-03 15:52:23', '2', '2018-05-03 15:52:23');
 
 -- ----------------------------
 -- Table structure for attd_approve_list
@@ -729,7 +744,7 @@ CREATE TABLE `attd_approve_list` (
   `create_time` datetime NOT NULL COMMENT '批注日期',
   `a_a_info_id` int(11) NOT NULL COMMENT '关联的审批申请表的ID',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of attd_approve_list
@@ -748,6 +763,7 @@ INSERT INTO `attd_approve_list` VALUES ('12', '11', '111', '2018-04-24 17:43:08'
 INSERT INTO `attd_approve_list` VALUES ('13', '13', '333', '2018-04-24 17:43:28', '10');
 INSERT INTO `attd_approve_list` VALUES ('14', '13', '444', '2018-04-24 17:44:59', '10');
 INSERT INTO `attd_approve_list` VALUES ('15', '13', '555', '2018-04-24 21:02:00', '10');
+INSERT INTO `attd_approve_list` VALUES ('16', '3', '111', '2018-05-03 15:52:43', '11');
 
 -- ----------------------------
 -- Table structure for attendance

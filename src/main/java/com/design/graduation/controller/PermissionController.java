@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.design.graduation.model.DeptPerm;
 import com.design.graduation.model.Employee;
 import com.design.graduation.model.Permission;
@@ -362,6 +363,22 @@ public class PermissionController {
     public List<XtreeData> xtreeData() {
         return permissionService.selXtreeData();
     }
+    /*public String xtreeData() {
+        List<XtreeData> xtreeDataList = permissionService.selXtreeData();
+        String xtreeDataStr = JSON.toJSONString(xtreeDataList);
+        System.out.println(xtreeDataStr);
+        try {
+            System.out.println(new String(xtreeDataStr.getBytes(), "UTF-8"));
+            System.out.println(new String(xtreeDataStr.getBytes(), "ISO8859-1"));
+            System.out.println(new String(xtreeDataStr.getBytes(), "GBK"));
+            System.out.println(new String(xtreeDataStr.getBytes(), "GB2312"));
+            return new String(xtreeDataStr.getBytes(), "UTF-8");
+        }
+        catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return xtreeDataStr;
+    }*/
 
     /**
      * 得到指定角色权限树
