@@ -233,11 +233,15 @@ public class AttdApproveInfoController {
     @RequestMapping(value = "/selectRelationData", method = RequestMethod.POST)
     @ResponseBody
     public JqGridJsonBean selectRelationData(String GridParam, Model model, HttpServletRequest request) {
+        Employee currentEmp = ((Employee) request.getSession().getAttribute("current_emp"));
+
         AttdApproveInfo attdApproveInfo = new Gson().fromJson(GridParam, AttdApproveInfo.class);//json 转对象
 
         String page = request.getParameter("page");//第几页
         String rows = request.getParameter("rows");//一页有几行
         String order_by = request.getParameter("order_by");//排序
+
+        attdApproveInfo.setEmpId(currentEmp.getId());
 
         //分页查询
         return attdApproveInfoService.selectRelationData(page, rows, order_by, attdApproveInfo);

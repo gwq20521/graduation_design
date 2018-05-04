@@ -52,17 +52,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     </div>
     <!--过滤条件-->
     <div class="filter panel panel-default">
-        <div class="panel-heading">
+        <!-- <div class="panel-heading">
             <span class="glyphicon glyphicon-search"></span>
             <span>过滤条件</span>
         </div>
         <div class="panel-body pad-tb-25">
             <span>申请人：</span>
 	        <input type="text" placeholder="请输入申请人名称" id="searchSelectRealname">
-            <!-- <span>请假日期：</span>
-	        <input type="text" placeholder="请输入日期" id="searchSelectCreateTime"> -->
+            <span>请假日期：</span>
+	        <input type="text" placeholder="请输入日期" id="searchSelectCreateTime">
 	        <button class="chaxun-bottom" id="attd_approve_info_chaxun">查询</button>
-        </div>
+        </div> -->
         
         <div class="panel panel-default">
         	<div class="panel-heading">
