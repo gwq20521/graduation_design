@@ -103,6 +103,17 @@ public class ActivitiConsoleUtils {
                 .list();
     }
 
+    public Task getTaskByTaskId(String taskId) {
+        return processEngine.getTaskService().createTaskQuery().taskId(taskId).singleResult();
+    }
+
+    public ProcessInstance getProcessInstanceByTaskId(String taskId) {//根据taskId查找businessKey
+        Task task = processEngine.getTaskService().createTaskQuery().taskId(taskId).singleResult();
+
+        return processEngine.getRuntimeService().createProcessInstanceQuery()
+                .processInstanceId(task.getProcessInstanceId()).singleResult();
+    }
+
     public List<PvmTransition> getPvmTransitions(String taskId) {//根据taskId得到当前任务所在的流程实例正在执行的节点的所有的sequenceFlow的名称
         ActivityImpl activityImpl = getActivityImplByTaskId(taskId);
 

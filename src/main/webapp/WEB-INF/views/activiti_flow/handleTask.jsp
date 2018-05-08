@@ -133,10 +133,11 @@ $(function(){
 	var outcomeListSize = '${outcomeListSize}';
 	
 	var actHtmlStr = "<span>温馨提示：带*的为必填部分，请核对完成后点击保存</span>";
-	if (outcomeListSize != null && outcomeListSize>0) {
-		actHtmlStr += "<span type = 'button' id ='save' class='save'>保存</span>";
+	if (outcomeListSize != null && outcomeListSize>0) {//只要不出错，就不会出现不能处理的任务
+		actHtmlStr += "<span type = 'button' id ='pass' class='save'>通过</span>";
+		actHtmlStr += "<span type = 'button' id ='reject' class='save'>驳回</span>";
 	}
-	actHtmlStr += "<span type = 'button' id ='back' class='back'>返回</span>";
+	actHtmlStr += "&nbsp;&nbsp;&nbsp;&nbsp;<span type = 'button' id ='back' class='back'>返回</span>";
 	
 	$("#spanDivId").html(actHtmlStr);
 	
@@ -149,11 +150,11 @@ $(function(){
 
 	var taskId = '${taskId}';
 	
-	$("#save").click(function(){
+	$("#pass").click(function(){
 		var annotation = $("#annotation").val();
 		//alert(annotation);
 
-	    $.ajax({url:'<%=path %>/attd_approve_list/insert',
+	    $.ajax({url:'<%=path %>/attd_approve_list/insertByPass',
        		type:'post',
             data: {annotation:annotation,
             	attdApproveInfoId:attdApproveInfo.id,
@@ -161,6 +162,29 @@ $(function(){
            	success:function(data){
            		if(data.code == "OK"){
            			alert("任务办理成功");
+               		window.location.href= "<%=path %>/activiti_flow/showTask";
+           		} else {
+           			alert(data.msg);
+           		}
+           	},
+           	error : function() {
+           		alert("异常！");
+           	}
+        });
+	});
+
+	$("#reject").click(function(){
+		var annotation = $("#annotation").val();
+		//alert(annotation);
+
+	    $.ajax({url:'<%=path %>/attd_approve_list/insertByReject',
+       		type:'post',
+            data: {annotation:annotation,
+            	attdApproveInfoId:attdApproveInfo.id,
+            	taskId:taskId}, 
+           	success:function(data){
+           		if(data.code == "OK"){
+           			alert("任务驳回成功");
                		window.location.href= "<%=path %>/activiti_flow/showTask";
            		} else {
            			alert(data.msg);

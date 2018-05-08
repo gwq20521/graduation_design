@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Task;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -114,15 +115,15 @@ public class AttdApproveListController {
     }
 
     /**
-     * 对 attd_approve_list 的数据插入操作
+     * 对 attd_approve_list 的数据插入操作 - 通过，走入下一层级
      * @param attdApproveList json 数据对象
      * @param model spring model 操作
      * @param request 请求数据
      * @return ReturnData 通用数据对象
      */
-    @RequestMapping(value = "/insert", method = RequestMethod.POST)
+    @RequestMapping(value = "/insertByPass", method = RequestMethod.POST)
     @ResponseBody
-    public ReturnData insert(Model model, HttpServletRequest request) {
+    public ReturnData insertByPass(Model model, HttpServletRequest request) {
         Employee currentEmp = ((Employee) request.getSession().getAttribute("current_emp"));
 
         //添加批注列表信息
@@ -178,6 +179,54 @@ public class AttdApproveListController {
 
         if (pi == null) {//该流程已经完成了
             attdApproveInfo.setApproveState(3);//如果当前的任务是提交申请，则设置状态值为1 - 0-等待提交 1-开始审批 2-审批中 3-审批通过 4-审批驳回
+            attdApproveInfoService.update(attdApproveInfo);
+        }
+
+        return attdApproveListService.insert(attdApproveList);//执行插入 AttdApproveList 操作
+    }
+
+    /**
+     * 对 attd_approve_list 的数据插入操作 - 驳回
+     * 
+     *  删除 任务
+     *  
+     *  记录审批信息
+     *  
+     *  修改相关的审批状态
+     * 
+     * @param attdApproveList json 数据对象
+     * @param model spring model 操作
+     * @param request 请求数据
+     * @return ReturnData 通用数据对象
+     */
+    @RequestMapping(value = "/insertByReject", method = RequestMethod.POST)
+    @ResponseBody
+    public ReturnData insertByReject(Model model, HttpServletRequest request) {
+        Employee currentEmp = ((Employee) request.getSession().getAttribute("current_emp"));
+
+        //添加批注列表信息
+        String attdApproveInfoId = request.getParameter("attdApproveInfoId");
+
+        String annotation = request.getParameter("annotation");
+
+        AttdApproveList attdApproveList = new AttdApproveList();
+
+        int attdApproveInfoIdI = Integer.valueOf(attdApproveInfoId);
+
+        attdApproveList.setaAInfoId(attdApproveInfoIdI);
+        attdApproveList.setAnnotation(annotation);
+        attdApproveList.setEmpId(currentEmp.getId());
+
+        //删除任务
+        String taskId = request.getParameter("taskId");
+        Task task = activitiConsoleUtils.getTaskByTaskId(taskId);
+        ProcessInstance pi = activitiConsoleUtils.deleteProcessInstance(task);
+
+        AttdApproveInfo attdApproveInfo = new AttdApproveInfo();
+        attdApproveInfo.setId(attdApproveInfoIdI);
+
+        if (pi == null) {//该流程已经完成了
+            attdApproveInfo.setApproveState(4);//如果当前的任务是提交申请，则设置状态值为1 - 0-等待提交 1-开始审批 2-审批中 3-审批通过 4-审批驳回
             attdApproveInfoService.update(attdApproveInfo);
         }
 
