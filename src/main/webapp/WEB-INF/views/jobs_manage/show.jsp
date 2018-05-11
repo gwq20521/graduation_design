@@ -234,7 +234,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
        		},
            	success:function(data){
            		if(data.code == "OK"){
-           			layer.msg(data.data.data[0].jobWorkInfo,{icon:1,time:1500});
+           			layer.msg(data.data.data[0].jobWorkInfo,{icon:6,time:1500});
            		} else {
            			layer.msg(data.msg,{icon:2,time:3000});
            		}

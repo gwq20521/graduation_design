@@ -36,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.alibaba.fastjson.JSON;
 import com.design.graduation.model.Department;
 import com.design.graduation.model.DeptPerm;
+import com.design.graduation.security.SecurityUtil;
 import com.design.graduation.service.DepartmentService;
 import com.design.graduation.service.DeptPermService;
 import com.design.graduation.util.JqGridJsonBean;
@@ -65,10 +66,14 @@ public class DepartmentController {
     @Resource
     private DeptPermService deptPermService;
 
+    @Resource
+    private SecurityUtil securityUtil;
+
     /**
      * 数据展示页面
      * @return
      */
+    //@CacheEvict(value = "department_show", allEntries = true)
     @RequiresPermissions(value = "department_show")
     @RequestMapping(value = "/show", method = RequestMethod.GET)
     public String show(Model model, HttpServletRequest request) {
@@ -255,6 +260,9 @@ public class DepartmentController {
                 deptPermService.insert(deptPermTemp);
             }
         }
+
+        //更新权限缓存
+        securityUtil.reloadAuthorizing(deptId);
 
         return departmentService.update(department);//执行 Department  操作
     }

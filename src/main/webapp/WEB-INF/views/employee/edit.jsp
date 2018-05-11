@@ -278,15 +278,44 @@ var employeeParam = {};
 	
 
 	$("#save").click(function(){
+		//首先需要判断用户名是否已经存在
 		var param = JSON.parse(JSON.stringify(employeeParam));
+		param.loginname=$("#loginname").val();
+		
+		//先判断用户名是否发生了变化
+		if (param.loginname == olddata.loginname) {
+			saveParam(param);
+		} else {
+			$.ajax({url:'<%=path %>/employee/ajaxLoginname',
+	       		type:'post',
+	       		cache:false,
+	       		dataType:'json',
+	       		data: JSON.stringify(param),
+	       		contentType: "application/json;charset=UTF-8",
+	           	success:function(data){
+	           		if(data.code == "OK"){
+	           			saveParam(param);
+	           		} else {
+		           		layer.msg(data.msg,{icon:2,time:3000});
+	           		}
+	           	},
+	           	error : function() {
+		           	layer.msg("异常！",{icon:2,time:3000});
+	           	}
+	        });
+		}
+		
+	});
+	
+	
+	function saveParam(param) {
 		param.id=$("#id").val();
 		param.empCode=$("#empCode").val();
-		param.loginname=$("#loginname").val();
 		param.password=$("#password").val();
 		param.realname=$("#realname").val();
 		param.entryTime=$("#entryTime").val();
 		param.jobposId=$("#jobposId").val();
-		
+
 	    $.ajax({url:'<%=path %>/employee/update',
        		type:'post',
        		cache:false,
@@ -306,7 +335,8 @@ var employeeParam = {};
 	           	layer.msg("异常！",{icon:2,time:3000});
            	}
        });
-	});
+	}
+	
 	
 	$("#back").click(function(){
 		window.location.href= "<%=path %>/employee/show";

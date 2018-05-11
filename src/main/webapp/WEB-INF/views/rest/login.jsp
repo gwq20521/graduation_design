@@ -21,6 +21,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <script src="<%=path %>/assets/js/html5shiv.min.js"></script>
     <script src="<%=path %>/assets/js/respond.min.js"></script>
     <![endif]-->
+    
+    <script src="<%=path %>/assets/js/layer/layer.js"></script>
+   	
+    <style type="text/css">
+    
+		.LG-r-xm input,.LG-r-mm input{
+		    background:white;
+		    border:1px solid #ddd;
+		    /* color:#999; */
+		}
+    
+    </style>
+    
 </head>
 
 <body>

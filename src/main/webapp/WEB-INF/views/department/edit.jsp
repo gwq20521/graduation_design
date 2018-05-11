@@ -292,7 +292,9 @@ $(function(){
                	success:function(data){
                		if(data.code == "OK"){
                			layer.msg("数据修改成功",{icon:1,time:1500},function(){
-                       		window.location.href= "<%=path %>/department/show";
+               				//由于涉及到了权限的修改，此处需要重新加载进入首页 - 相当于一次整体页面的刷新 - 主要是左侧标签
+                       		//window.location.href= "<%=path %>/department/show";
+                       		window.parent.location.href= "<%=path %>/rest/main";
                			});
                		} else {
                			layer.msg(data.msg,{icon:2,time:3000});

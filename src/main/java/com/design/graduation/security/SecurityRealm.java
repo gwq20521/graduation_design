@@ -87,20 +87,40 @@ public class SecurityRealm extends AuthorizingRealm {
         Subject subject = SecurityUtils.getSubject();
         subject.getSession().setAttribute("current_emp", currentEmp);
 
-        SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(currentEmp, currentEmp.getPassword(),
-                getClass().getName());
+        //Object principal, Object credentials, String realmName
+        /*SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(currentEmp, currentEmp.getPassword(),
+                getClass().getName());*/
+
+        int jobposId = currentEmp.getJobposId();
+
+        int deptId = jobposService.selectDeptIdById(jobposId);
+
+        SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(deptId + "_permissions",
+                currentEmp.getPassword(), currentEmp.getLoginname());
 
         return authenticationInfo;
     }
 
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        String username = String.valueOf(principals.getPrimaryPrincipal());
+        //改为获取用户部门的权限
+        Subject subject = SecurityUtils.getSubject();
+
+        Employee currentEmp = (Employee) subject.getSession().getAttribute("current_emp");
+
+        int jobposId = currentEmp.getJobposId();
+
+        int deptId = jobposService.selectDeptIdById(jobposId);
+
+        //String username = String.valueOf(principals.getPrimaryPrincipal());
+        //Employee [id = 19,emp_code = 010,loginname = 1,password = 1,realname = 1,entry_time = 2018-05-11,jobpos_id = 70,register_time = 2018-05-11 12:25:48.0,]
+        //Employee [id = 1,emp_code = 001,loginname = admin,password = 123456,realname = guo,entry_time = 2018-03-09,jobpos_id = 1,register_time = 2018-03-09 11:38:41.0,]
 
         //使用shiro cache
-        Cache<String, SimpleAuthorizationInfo> userAuthori = this.cacheManager.getCache("MyAuthorizationInfo");
+        Cache<String, SimpleAuthorizationInfo> userAuthori = cacheManager.getCache("MyAuthorizationInfo");
 
         //获取权限
-        SimpleAuthorizationInfo authorizationInfo = userAuthori.get(username + "_permissions");
+        //SimpleAuthorizationInfo authorizationInfo = userAuthori.get(username + "_permissions");
+        SimpleAuthorizationInfo authorizationInfo = userAuthori.get(deptId + "_permissions");
 
         //不为空的时候直接返回，否则进行查询
         if (authorizationInfo != null) {
@@ -119,13 +139,13 @@ public class SecurityRealm extends AuthorizingRealm {
             perms.add(perm.get("MENUCODE").toString());
         }*/
 
-        Subject subject = SecurityUtils.getSubject();
-
+        /*Subject subject = SecurityUtils.getSubject();
+        
         Employee currentEmp = (Employee) subject.getSession().getAttribute("current_emp");
-
+        
         int jobposId = currentEmp.getJobposId();
-
-        int deptId = jobposService.selectDeptIdById(jobposId);
+        
+        int deptId = jobposService.selectDeptIdById(jobposId);*/
 
         DeptPerm deptPerm = new DeptPerm();
         deptPerm.setDeptId(deptId);
@@ -162,7 +182,8 @@ public class SecurityRealm extends AuthorizingRealm {
             }
         }
 
-        userAuthori.put(username + "_permissions", authorizationInfo);
+        //userAuthori.put(username + "_permissions", authorizationInfo);
+        userAuthori.put(deptId + "_permissions", authorizationInfo);
 
         return authorizationInfo;
     }
