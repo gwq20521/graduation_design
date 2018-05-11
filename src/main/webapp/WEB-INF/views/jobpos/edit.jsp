@@ -23,6 +23,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	
     <script type="text/javascript" src="<%=path %>/assets/js/layer/laydate.js"></script>
 	
+    <script src="<%=path %>/assets/js/layer/layer.js"></script>
+   	
     <style type="text/css">
 		.amap-sug-result{
 			z-index:100000;
@@ -157,7 +159,7 @@ $.ajax({
 	    $("#deptId").html(_html);
    	}, 
    	error:function() {
-   		alert("异常！");
+   		layer.msg("异常！",{icon:2,time:3000});
    	}
 });
 
@@ -179,14 +181,15 @@ $.ajax({
        		contentType: "application/json;charset=UTF-8",
            	success:function(data){
            		if(data.code == "OK"){
-           			alert("数据修改成功");
-               		window.location.href= "<%=path %>/jobpos/show";
+           			layer.msg("数据修改成功",{icon:1,time:1500},function(){
+                   		window.location.href= "<%=path %>/jobpos/show";
+           			});
            		} else {
-           			alert(data.msg);
+           			layer.msg(data.msg,{icon:2,time:3000});
            		}
            	},
            	error : function() {
-           		alert("异常！");
+           		layer.msg("异常！",{icon:2,time:3000});
            	}
        });
 	});

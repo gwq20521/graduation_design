@@ -27,6 +27,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     
     <script type="text/javascript" src="<%=path %>/assets/js/layer/laydate.js"></script>
 	
+    <script src="<%=path %>/assets/js/layer/layer.js"></script>
+   	
 	<style type="text/css">
 		span.glyphicon{
 			height:30px;
@@ -133,7 +135,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     			repeatitems: false
    			},
    			loadError: function(xhr,status,error){  
- 			    alert(status + " loading data of " + $(this).attr("id") + " : " + error );    
+   				layer.msg(status + " loading data of " + $(this).attr("id") + " : " + error ,{icon:2,time:6000});
    			},
             pager: "#GRIDPAGE"
         });
@@ -153,14 +155,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	       		contentType: "application/json;charset=UTF-8", */
 	           	success:function(data){
 	           		if(data.code == "OK"){
-	           			alert("数据删除成功");
-	           			window.location.href= "<%=path %>/activiti_flow/show";
+	           			layer.msg("数据删除成功",{icon:1,time:1500},function(){
+	           				window.location.href= "<%=path %>/activiti_flow/show";
+	           			});
 	           		} else {
-	           			alert(data.msg);
+	           			layer.msg(data.msg,{icon:2,time:3000});
 	           		}
 	           	}, 
 	           	error : function() {
-	           		alert("异常！");
+	           		layer.msg("异常！",{icon:2,time:3000});
 	           	}
 	        });
 		}

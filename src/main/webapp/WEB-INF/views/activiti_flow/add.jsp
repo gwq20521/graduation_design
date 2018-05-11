@@ -28,6 +28,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <%-- <script src="<%=path %>/assets/js/bootstrap/fileinput/fileinput.min.js"></script>
     <script src="<%=path %>/assets/js/bootstrap/fileinput/fileinput_locale_zh.js"></script> --%>
     
+    <script src="<%=path %>/assets/js/layer/layer.js"></script>
+   	
    </head>
    
    <style>
@@ -114,14 +116,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             contentType: false, 
            	success:function(data){
            		if(data.code == "OK"){
-           			alert("服务部署成功");
-               		window.location.href= "<%=path %>/activiti_flow/show";
+           			layer.msg("服务部署成功",{icon:1,time:1500},function(){
+           				window.location.href= "<%=path %>/activiti_flow/show";
+           			});
            		} else {
-           			alert(data.msg);
+           			layer.msg(data.msg,{icon:2,time:3000});
            		}
            	},
            	error : function() {
-           		alert("异常！");
+           		layer.msg("异常！",{icon:2,time:3000});
            	}
        });
 	});

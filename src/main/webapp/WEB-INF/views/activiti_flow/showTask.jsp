@@ -27,6 +27,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     
     <script type="text/javascript" src="<%=path %>/assets/js/layer/laydate.js"></script>
 	
+    <script src="<%=path %>/assets/js/layer/layer.js"></script>
+   	
 	<style type="text/css">
 		span.glyphicon{
 			height:30px;
@@ -130,7 +132,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     			repeatitems: false
    			},
    			loadError: function(xhr,status,error){  
- 			    alert(status + " loading data of " + $(this).attr("id") + " : " + error );    
+   				layer.msg(status + " loading data of " + $(this).attr("id") + " : " + error ,{icon:2,time:6000});  
    			},
             pager: "#GRIDPAGE"
         });

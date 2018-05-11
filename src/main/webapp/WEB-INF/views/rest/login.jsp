@@ -94,12 +94,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     					if(res.code=='OK'){
     						location.href='<%=path %>/rest/main';
     					}else{
-    						alert("登录失败，请检查用户名或密码！");
+    						layer.msg("登录失败，请检查用户名或密码！",{icon:2,time:3000});
     					}
                     }
                 });
         	}else{
-        		alert("登录失败，请输入用户名或密码！");
+				layer.msg("登录失败，请输入用户名或密码！",{icon:2,time:3000});
         	}
         });
     });

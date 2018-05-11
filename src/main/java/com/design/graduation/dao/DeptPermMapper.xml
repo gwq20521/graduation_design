@@ -47,6 +47,13 @@
         </foreach>
     </delete>
     
+    <delete id="deleteBatchByDeptIds">
+        DELETE FROM dept_perm WHERE dept_id IN 
+        <foreach collection="deptIds" item="deptId" separator="," open="(" close=")">
+        	#{deptId}
+        </foreach>
+    </delete>
+    
     <update id="update" parameterType="com.design.graduation.model.DeptPerm">
     	update dept_perm
     	<set>

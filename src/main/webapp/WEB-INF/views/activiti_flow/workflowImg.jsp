@@ -27,6 +27,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     
     <script type="text/javascript" src="<%=path %>/assets/js/layer/laydate.js"></script>
 	
+    <script src="<%=path %>/assets/js/layer/layer.js"></script>
+   	
 	<style type="text/css">
 		span.glyphicon{
 			height:30px;

@@ -42,7 +42,8 @@ public class DepartmentServiceImpl implements DepartmentService {
         // TODO Auto-generated method stub
         ReturnData rd = new ReturnData();
         try {
-            int deptId = departmentMapper.insert(department);
+            departmentMapper.insert(department);
+            int deptId = department.getId();
             Map<String, Object> dataMap = new HashMap<String, Object>();
             dataMap.put("data", deptId);
             rd.setData(dataMap);

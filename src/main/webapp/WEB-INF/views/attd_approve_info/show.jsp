@@ -25,6 +25,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
     <script src="<%=path %>/assets/js/user_common.js"></script>
     
+    <script src="<%=path %>/assets/js/layer/layer.js"></script>
+   	
 	<style type="text/css">
 		span.glyphicon{
 			height:30px;
@@ -217,14 +219,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	       		data:{id: attdApproveId},
 	           	success:function(data){
 	           		if(data.code == "OK"){
-	           			alert("数据删除成功");
-	           			window.location.href= "<%=path %>/attd_approve_info/show";
+	           			layer.msg("数据删除成功",{icon:1,time:1500},function(){
+		           			window.location.href= "<%=path %>/attd_approve_info/show";
+	           			});
 	           		} else {
-	           			alert(data.msg);
+	           			layer.msg(data.msg,{icon:2,time:3000});
 	           		}
 	           	}, 
 	           	error : function() {
-	           		alert("异常！");
+	           		layer.msg("异常！",{icon:2,time:3000});
 	           	}
 	        });
 		}
@@ -246,14 +249,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	       		},
 	           	success:function(data){
 	           		if(data.code == "OK"){
-	           			alert("审批提交成功");
-	           			window.location.href= "<%=path %>/attd_approve_info/show";
+	           			layer.msg("审批提交成功",{icon:1,time:1500},function(){
+	           				window.location.href= "<%=path %>/attd_approve_info/show";
+	           			});
 	           		} else {
-	           			alert(data.msg);
+	           			layer.msg(data.msg,{icon:2,time:3000});
 	           		}
 	           	}, 
 	           	error : function() {
-	           		alert("异常！");
+	           		layer.msg("异常！",{icon:2,time:3000});
 	           	}
 	        });
 		}

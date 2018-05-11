@@ -187,6 +187,9 @@ public class DepartmentController {
         }
         else {
             rd = departmentService.deleteBatch(ids.split(","));
+
+            //还要删除权限关联表中的数据
+            rd = deptPermService.deleteBatchByDeptIds(ids.split(","));
         }
         return rd;
     }
@@ -226,10 +229,12 @@ public class DepartmentController {
 
         String permValue = request.getParameter("permValue");//2,3,4
 
-        //首先 - 新增设备的时候肯定是新增
-        String[] permValueArray = permValue.split(",");
-        for (int i = 0; i < permValueArray.length; i++) {
-            permValueNew.add(Integer.valueOf(permValueArray[i]));
+        if (!"".equals(permValue)) {
+            //首先 - 新增设备的时候肯定是新增
+            String[] permValueArray = permValue.split(",");
+            for (int i = 0; i < permValueArray.length; i++) {
+                permValueNew.add(Integer.valueOf(permValueArray[i]));
+            }
         }
 
         //删除没有的

@@ -25,6 +25,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
     <script src="<%=path %>/assets/js/user_common.js"></script>
     
+    <script src="<%=path %>/assets/js/layer/layer.js"></script>
+   	
 	<style type="text/css">
 		span.glyphicon{
 			height:30px;
@@ -185,14 +187,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	       		data:{id: jobsManageId},
 	           	success:function(data){
 	           		if(data.code == "OK"){
-	           			alert("数据删除成功");
-	           			window.location.href= "<%=path %>/jobs_manage/show";
+	           			layer.msg("数据删除成功",{icon:1,time:1500},function(){
+		           			window.location.href= "<%=path %>/jobs_manage/show";
+	           			});
 	           		} else {
-	           			alert(data.msg);
+	           			layer.msg(data.msg,{icon:2,time:3000});
 	           		}
 	           	}, 
 	           	error : function() {
-	           		alert("异常！");
+	           		layer.msg("异常！",{icon:2,time:3000});
+
 	           	}
 	        });
 		}
@@ -208,14 +212,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	       		},
 	           	success:function(data){
 	           		if(data.code == "OK"){
-	           			alert("任务分配成功");
-	           			window.location.href= "<%=path %>/jobs_manage/show";
+	           			layer.msg("任务分配成功",{icon:1,time:1500},function(){
+		           			window.location.href= "<%=path %>/jobs_manage/show";
+	           			});
 	           		} else {
-	           			alert(data.msg);
+	           			layer.msg(data.msg,{icon:2,time:3000});
 	           		}
 	           	}, 
 	           	error : function() {
-	           		alert("异常！");
+	           		layer.msg("异常！",{icon:2,time:3000});
 	           	}
 	        });
 		}
@@ -229,13 +234,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
        		},
            	success:function(data){
            		if(data.code == "OK"){
-           			alert(data.data.data[0].jobWorkInfo);
+           			layer.msg(data.data.data[0].jobWorkInfo,{icon:1,time:1500});
            		} else {
-           			alert(data.msg);
+           			layer.msg(data.msg,{icon:2,time:3000});
            		}
            	}, 
            	error : function() {
-           		alert("异常！");
+           		layer.msg("异常！",{icon:2,time:3000});
            	}
         });
 	}

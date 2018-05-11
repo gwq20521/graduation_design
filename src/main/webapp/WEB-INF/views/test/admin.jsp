@@ -25,6 +25,8 @@
 
     <script src="<%=path %>/assets/js/layer/laydate.js"></script>
 
+    <script src="<%=path %>/assets/js/layer/layer.js"></script>
+   	
 </head>
 
 <style>

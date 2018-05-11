@@ -25,6 +25,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
     <script src="<%=path %>/assets/js/user_common.js"></script>
     
+    <script src="<%=path %>/assets/js/layer/layer.js"></script>
+   	
 	<style type="text/css">
 		span.glyphicon{
 			height:30px;
@@ -173,16 +175,23 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	$("#contract_edit").click(function(){
 		var ids = $("#GRIDTABLE").jqGrid("getGridParam","selarrrow");
 		if(ids.length == 0){
-			alert("先选择一条数据");
+			layer.msg("先选择一条数据",{icon:0,time:3000});
 			return;
 		} else if(ids.length > 1){
-			alert("请您只选择一条需要修改的数据");
+			layer.msg("请您只选择一条需要修改的数据",{icon:0,time:3000});
 			return;
 		} else {
-			if (confirm("确认修改当前选中数据的信息吗？")) {
+			layer.confirm('确认修改当前选中数据的信息吗？',{
+				title : '确认修改',
+				icon:3,
+				btn:['是','否'],
+			}, function(index) {
+				layer.close(index);
 				//暂时不涉及经纬度的信息加载 - 暂不涉及相关网格码的修改
 				window.location.href= "<%=path %>/contract/edit?id="+ids;
-			}
+			}, function(index) {
+				layer.close(index);
+			});
 		}
 	});
     
@@ -192,10 +201,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     $("#contract_remove").click(function(){
 		var ids = $("#GRIDTABLE").jqGrid("getGridParam","selarrrow");
 		if(ids == ""){
-			alert("先选择一条数据");
+			layer.msg("先选择一条数据",{icon:0,time:3000});
 			return;
 		} else {
-			if (confirm("确认删除当前选中数据吗？")) {
+			layer.confirm('确认删除当前选中数据吗？',{
+				title : '确认删除',
+				icon:3,
+				btn:['是','否'],
+			}, function(index) {
+				layer.close(index);
 				$.ajax({url:'<%=path %>/contract/deleteBatch',
 		       		type:'post',
 		       		cache:false,
@@ -205,36 +219,20 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		       		},
 		           	success:function(data){
 		           		if(data.code == "OK"){
-		           			alert("数据删除成功");
-		           			window.location.reload();
+		           			layer.msg("数据删除成功",{icon:1,time:1500},function(){
+		           				window.location.reload();
+		           			});
 		           		} else {
-		           			alert(data.msg);
+		           			layer.msg(data.msg,{icon:2,time:3000});
 		           		}
 		           	}, 
 		           	error : function() {
-		           		alert("异常！");
+		           		layer.msg("异常！",{icon:2,time:3000});
 		           	}
 		        });
-			}
-		}
-	});
-    
-    //导入
-    $("#contract_import").click(function(){
-		alert("contract_import");
-	});
-    
-    //导出
-    $("#ccontract_export").click(function(){
-    	var ids = $("#GRIDTABLE").jqGrid("getGridParam","selarrrow");
-		if(ids.length == 0){
-			if (confirm("确认导出当前表中的全部数据吗？")) {
-				window.location.href= "<%=path %>/contract/export?page=1&rows=5&json={}";
-			}
-		} else if(ids.length > 0){
-			if (confirm("确认导出当前选中数据吗？")) {
-				window.location.href= "<%=path %>/contract/export?page=1&rows=5&json={}";
-			}
+			}, function(index) {
+				layer.close(index);
+			});
 		}
 	});
     
