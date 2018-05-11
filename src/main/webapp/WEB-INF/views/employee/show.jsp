@@ -8,7 +8,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html>
   <head>
     <base href="<%=basePath%>">
-    <title>公司OA系统</title>
+    <title>人力资源管理系统</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="<%=path %>/assets/css/bootstrap/bootstrap.css">

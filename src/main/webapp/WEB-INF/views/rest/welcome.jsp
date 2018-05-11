@@ -36,6 +36,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 <body>
     <div id="welcomeDiv">
-        <img src="<%=path %>/assets/image/welcome.jpg">
+        <img src="<%=path %>/assets/image/welcome-4.jpg">
     </div>
 </body>

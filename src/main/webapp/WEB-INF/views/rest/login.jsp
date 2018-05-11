@@ -11,7 +11,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1"> 
     <base href="<%=basePath%>">
-    <title>公司OA系统</title>
+    <title>人力资源管理系统</title>
     <link rel="stylesheet" href="<%=path %>/assets/css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="<%=path %>/assets/css/index.css">
     <script src="<%=path %>/assets/js/jquery/jquery-1.11.0.min.js"></script>
@@ -28,7 +28,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="navbar navbar-inverse" id="header">
     <div class="container-fluid">
         <div class="navbar-header header-left left">
-            <span>公司OA平台</span>
+            <span>人力资源管理系统</span>
         </div>
     </div>
 </div>
@@ -37,7 +37,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<!-- 屏蔽登录页的加载和跳转 -->
 	<input type="hidden" value="LoginPage" id ="hiddenLoginPage">
     <div id="LG-con-l" class="col-xs-4 col-xs-offset-2">
-        <img src="<%=path %>/assets/image/login-1.png" class="LG-show">
+        <img src="<%=path %>/assets/image/login-2.png" class="LG-show">
     </div>
     <div id="LG-con-r" class="col-xs-5">
         <div class="LG-r">
