@@ -1,5 +1,4 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -74,9 +73,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </div>   
 
 
-<shiro:hasPermission name="department_show">
-    <!-- 使标签重新生效 -->      
-</shiro:hasPermission>
+<!-- <shiro:hasPermission name="department_show">
+    使标签重新生效      
+</shiro:hasPermission> -->
 
 
 </body>
